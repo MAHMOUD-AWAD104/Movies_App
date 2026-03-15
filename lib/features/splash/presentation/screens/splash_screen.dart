@@ -146,13 +146,13 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final prefs = sl<SharedPreferences>();
-    final isOnboarded = prefs.getBool('is_onboarded') ?? false;
+    // final isOnboarded = prefs.getBool('is_onboarded') ?? false;
     final isLoggedIn = prefs.getString('api_key') != null;
 
-    if (!isOnboarded) {
+    if (!isLoggedIn) {
       context.go(AppRoutes.onboarding);
-    } else if (!isLoggedIn) {
-      context.go(AppRoutes.login);
+      // } else if (!isLoggedIn) {
+      //   context.go(AppRoutes.login);
     } else {
       context.go(AppRoutes.home);
     }
