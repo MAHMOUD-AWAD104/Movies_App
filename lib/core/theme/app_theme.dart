@@ -33,37 +33,38 @@ class AppTheme {
           contentPadding:
               EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(15.r),
             borderSide: const BorderSide(color: AppColors.error, width: 1.5),
           ),
           hintStyle: TextStyle(
             color: AppColors.hint,
-            fontSize: 14.sp,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
+            foregroundColor: AppColors.surface,
             minimumSize: Size(double.infinity, 52.h),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(15.r),
             ),
             textStyle: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w400,
               fontFamily: 'Poppins',
             ),
           ),
