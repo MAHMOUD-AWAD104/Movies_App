@@ -6,6 +6,8 @@ import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/di/injection_container.dart';
 import 'package:movies_app/features/auth/forget_password/presentation/cubit/forget_password_cubit.dart';
 
+import '../../../register/presentation/widgets/default_text_form_field.dart';
+
 class ForgetPasswordScreen extends StatelessWidget {
   const ForgetPasswordScreen({super.key});
 
@@ -53,33 +55,26 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        appBar: AppBar(leading: const BackButton()),
+        appBar: AppBar(leading: const BackButton(),
+          title: Text('Forget Password'),),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.lock_reset_rounded,
-                  size: 60.sp, color: AppColors.primary),
-              SizedBox(height: 24.h),
-              Text('Forgot Password?',
-                  style: Theme.of(context).textTheme.headlineLarge),
-              SizedBox(height: 8.h),
-              Text(
-                'Enter your email and we\'ll send a reset link',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              SizedBox(height: 40.h),
-              TextFormField(
+             Image.asset('assets/images/forgot.png'),
+              SizedBox(height: 25.h),
+              DefaultTextFormField(
+                hintText: 'ُEmail',
+                prifixIconImageName: 'email',
                 controller: _emailCtrl,
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: AppColors.white),
-                decoration: const InputDecoration(
-                  hintText: 'Your email address',
-                  prefixIcon: Icon(Icons.email_outlined, color: AppColors.hint),
-                ),
-              ),
-              SizedBox(height: 32.h),
+                validator: (value){
+                  if(value == null || value.length<10){
+                    return 'Invalid email';
+                  }
+                  return null;
+                },),
+              SizedBox(height: 25.h),
               BlocBuilder<ForgetPasswordCubit, ForgetPasswordState>(
                 builder: (context, state) {
                   return ElevatedButton(
@@ -95,7 +90,7 @@ class _ForgetPasswordViewState extends State<_ForgetPasswordView> {
                     child: state is ForgetPasswordLoading
                         ? const CircularProgressIndicator(
                             color: AppColors.white)
-                        : const Text('Send Reset Link'),
+                        : const Text('Verify Email'),
                   );
                 },
               ),
