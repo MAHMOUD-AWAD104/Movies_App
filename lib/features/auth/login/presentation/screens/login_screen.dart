@@ -8,6 +8,8 @@ import 'package:movies_app/core/di/injection_container.dart';
 import 'package:movies_app/core/routes/app_router.dart';
 import 'package:movies_app/features/auth/login/presentation/cubit/login_cubit.dart';
 
+import '../../../register/presentation/widgets/default_text_form_field.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -58,7 +60,7 @@ class _LoginViewState extends State<_LoginView> {
         backgroundColor: AppColors.background,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.h),
             child: Form(
               key: _formKey,
               child: Column(
@@ -67,46 +69,23 @@ class _LoginViewState extends State<_LoginView> {
                   SizedBox(height: 30.h),
                   Center(child: Image.asset('assets/images/logo2.png',width: 100,height: 100,)),
                   SizedBox(height: 50.h),
-                  TextFormField(
+                  DefaultTextFormField(
+                    hintText: 'ُEmail',
+                    prifixIconImageName: 'email',
                     controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(color: AppColors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Email',
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SvgPicture.asset('assets/icons/email.svg',
-                            colorFilter: ColorFilter.mode(AppColors.white,  BlendMode.srcIn)),
-                      ),
-                    ),
-                    validator: (v) => v!.isEmpty ? 'Required' : null,
-                  ),
+                    validator: (value){
+                      if(value == null || value.length<10){
+                        return 'Invalid email';
+                      }
+                      return null;
+                    },),
                   SizedBox(height: 20.h),
-                  TextFormField(
+                  DefaultTextFormField(
+                    hintText: 'Password',
+                    prifixIconImageName: 'password',
                     controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    style: const TextStyle(color: AppColors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                      prefixIcon:
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: SvgPicture.asset('assets/icons/password.svg',
-                            colorFilter: ColorFilter.mode(AppColors.white,  BlendMode.srcIn)),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: AppColors.hint,
-                        ),
-                        onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword),
-                      ),
-                    ),
                     validator: (v) => v!.length < 6 ? 'Min 6 characters' : null,
-                  ),
+                    isPassword: true,),
                   SizedBox(height: 5.h),
                   Align(
                     alignment: Alignment.centerRight,
@@ -207,7 +186,7 @@ class _LoginViewState extends State<_LoginView> {
                               ),
                              borderRadius: BorderRadius.circular(20),),
                             child: SvgPicture.asset('assets/icons/LR.svg',width: 30,height: 30,)),
-                      ),
+                     ),
                       Spacer(),
                       GestureDetector(
                         onTap: (){

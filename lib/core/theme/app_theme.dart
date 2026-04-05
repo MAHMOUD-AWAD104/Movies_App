@@ -20,38 +20,41 @@ class AppTheme {
           elevation: 0,
           centerTitle: true,
           titleTextStyle: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w600,
-            color: AppColors.white,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.primary,
             fontFamily: 'Poppins',
           ),
-          iconTheme: const IconThemeData(color: AppColors.white),
+          iconTheme: const IconThemeData(color: AppColors.primary),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: AppColors.surface,
+          //constraints: BoxConstraints(maxHeight: 52,minHeight: 52),
           contentPadding:
               EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.r),
-            borderSide: BorderSide.none,
-          ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
-            borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+            borderSide: const BorderSide(color: AppColors.primary, ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.r),
-            borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+            borderSide: const BorderSide(color: Colors.red, ),
           ),
+          focusedErrorBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(color: Colors.red ),),
           hintStyle: TextStyle(
             color: AppColors.hint,
-            fontSize: 16.sp,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w400
+          ),
+          errorStyle: TextStyle(
+            color: Colors.red
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
