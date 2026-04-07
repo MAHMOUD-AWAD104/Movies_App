@@ -31,24 +31,22 @@ class _MovieDetailsView extends StatelessWidget {
       builder: (context, state) {
         if (state is MovieDetailsLoading) {
           return const Scaffold(
-            backgroundColor: AppColors.background,
             body: Center(
                 child: CircularProgressIndicator(color: AppColors.primary)),
           );
         }
-
-        if (state is MovieDetailsError) {
-          return Scaffold(
-            backgroundColor: AppColors.background,
-            body: Center(child: Text(state.message)),
-          );
+        else if (state is MovieDetailsError) {
+         // return Scaffold(
+        //    backgroundColor: AppColors.background,
+       //     body:
+              return Center(child: Text(state.message));
+       //   );
         }
-
-        if (state is MovieDetailsLoaded) {
+        else if (state is MovieDetailsLoaded) {
           final movie = state.movie;
-          return Scaffold(
-            backgroundColor: AppColors.background,
-            body: CustomScrollView(
+        //  return Scaffold(
+        //    backgroundColor: AppColors.background,
+            return CustomScrollView(
               slivers: [
                 _MovieAppBar(movie: movie),
                 SliverToBoxAdapter(
@@ -127,7 +125,7 @@ class _MovieDetailsView extends StatelessWidget {
             ),
           );
         }
-
+        else
         return const SizedBox.shrink();
       },
     );

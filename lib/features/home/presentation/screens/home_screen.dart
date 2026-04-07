@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 NavigationDestination(
                   icon: SvgPicture.asset('assets/icons/search.svg'),
-                  selectedIcon: SvgPicture.asset('assets/icons/browser.svg',
+                  selectedIcon: SvgPicture.asset('assets/icons/search.svg',
                     colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
                   label: 'Search',
                 ),
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 NavigationDestination(
                   icon: SvgPicture.asset('assets/icons/profile.svg'),
-                  selectedIcon: SvgPicture.asset('assets/icons/browser.svg',
+                  selectedIcon: SvgPicture.asset('assets/icons/profile.svg',
                     colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
                   label: 'Profile',
                 ),
