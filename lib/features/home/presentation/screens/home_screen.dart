@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/di/injection_container.dart';
 import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_cubit.dart';
@@ -34,42 +35,51 @@ class _HomeScreenState extends State<HomeScreen> {
         BlocProvider(create: (_) => sl<SearchCubit>()),
       ],
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        extendBody: true,
         body: IndexedStack(
           index: _selectedIndex,
           children: _tabs,
         ),
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: AppColors.surface,
-          indicatorColor: AppColors.primary.withOpacity(0.2),
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (index) =>
-              setState(() => _selectedIndex = index),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded, color: AppColors.primary),
-              label: 'Home',
+        bottomNavigationBar: SafeArea(
+          minimum: const EdgeInsets.only(right: 9,left: 9,bottom: 15),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: NavigationBar(
+              height: 60,
+              backgroundColor: AppColors.surface,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+             indicatorColor: Colors.transparent,
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (index) =>
+                  setState(() => _selectedIndex = index),
+              destinations:  [
+                NavigationDestination(
+                  icon: SvgPicture.asset('assets/icons/home.svg'),
+                  selectedIcon: SvgPicture.asset('assets/icons/home.svg',
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
+                  label: 'Home',
+                ),
+                NavigationDestination(
+                  icon: SvgPicture.asset('assets/icons/search.svg'),
+                  selectedIcon: SvgPicture.asset('assets/icons/browser.svg',
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
+                  label: 'Search',
+                ),
+                NavigationDestination(
+                  icon: SvgPicture.asset('assets/icons/browser.svg'),
+                  selectedIcon: SvgPicture.asset('assets/icons/browser.svg',
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
+                  label: 'Browse',
+                ),
+                NavigationDestination(
+                  icon: SvgPicture.asset('assets/icons/profile.svg'),
+                  selectedIcon: SvgPicture.asset('assets/icons/browser.svg',
+                    colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),),
+                  label: 'Profile',
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: Icon(Icons.search_outlined),
-              selectedIcon:
-                  Icon(Icons.search_rounded, color: AppColors.primary),
-              label: 'Search',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_outlined),
-              selectedIcon:
-                  Icon(Icons.grid_view_rounded, color: AppColors.primary),
-              label: 'Browse',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon:
-                  Icon(Icons.person_rounded, color: AppColors.primary),
-              label: 'Profile',
-            ),
-          ],
+          ),
         ),
       ),
     );

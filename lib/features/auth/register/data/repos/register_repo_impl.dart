@@ -18,6 +18,7 @@ class RegisterRepoImpl implements RegisterRepo {
     required String username,
     required String email,
     required String password,
+    required String phone,
   }) async {
     if (!await networkInfo.isConnected) {
       return const Left(NetworkFailure(message: 'No internet connection'));

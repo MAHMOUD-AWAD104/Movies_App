@@ -36,10 +36,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String username,
     required String email,
     required String password,
+    required String phone,
   }) async {
     emit(RegisterLoading());
     final result = await registerUseCase(
-      RegisterParams(username: username, email: email, password: password),
+      RegisterParams(username: username, email: email, password: password,phone: phone),
     );
     result.fold(
       (failure) => emit(RegisterFailure(message: failure.message)),
