@@ -16,34 +16,32 @@ class MovieCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16.r),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+                borderRadius: BorderRadius.all( Radius.circular(16.r)),
                 child: CachedNetworkImage(
                   imageUrl: movie.largeCoverImage,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                  placeholder: (_, __) => Container(
-                    color: AppColors.shimmerBase,
-                    child: const Center(
-                      child: Icon(Icons.movie, color: AppColors.hint),
+                //  placeholder: (_, __) => Container(
+                 //   color: AppColors.shimmerBase,
+                  //  child: const Center(
+                   //   child: Icon(Icons.movie, color: AppColors.hint),
                     ),
                   ),
-                  errorWidget: (_, __, ___) => Container(
-                    color: AppColors.shimmerBase,
-                    child:
-                        const Icon(Icons.broken_image, color: AppColors.hint),
+               //   errorWidget: (_, __, ___) => Container(
+                //    color: AppColors.shimmerBase,
+                //    child:
+                  //      const Icon(Icons.broken_image, color: AppColors.hint),
                   ),
-                ),
-              ),
-            ),
-            Padding(
+
+
+
+          /*  Padding(
               padding: EdgeInsets.all(8.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,31 +56,37 @@ class MovieCard extends StatelessWidget {
                       color: AppColors.white,
                     ),
                   ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(Icons.star_rounded,
-                          size: 14.sp, color: AppColors.primary),
-                      SizedBox(width: 4.w),
-                      Text(
-                        movie.rating.toStringAsFixed(1),
-                        style: TextStyle(
-                            color: AppColors.primary, fontSize: 12.sp),
-                      ),
-                      const Spacer(),
-                      Text(
-                        movie.year,
-                        style: TextStyle(
-                            fontSize: 11.sp, color: AppColors.textSecondary),
-                      ),
-                    ],
+                  SizedBox(height: 4.h),*/
+                  Container(
+                    margin: EdgeInsets.only(top: 9,left: 6),
+                    padding: EdgeInsets.symmetric(vertical: 3,horizontal: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.background.withOpacity(0.8)
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          movie.rating.toStringAsFixed(1),
+                          style: TextStyle(
+                              color: AppColors.white, fontSize: 16.sp),),
+                        SizedBox(width: 2.w),
+                        Icon(Icons.star_rounded,
+                            size: 16.sp, color: AppColors.primary),
+
+                       // const Spacer(),
+                     /*   Text(
+                          movie.year,
+                          style: TextStyle(
+                              fontSize: 11.sp, color: AppColors.textSecondary),
+                        ),*/
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+        );
   }
 }
