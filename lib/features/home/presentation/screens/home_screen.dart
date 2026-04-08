@@ -1,75 +1,144 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/core/constants/app_colors.dart';
-import 'package:movies_app/core/di/injection_container.dart';
-import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_cubit.dart';
-import 'package:movies_app/features/home/tabs/home/presentation/screens/home_tab_screen.dart';
-import 'package:movies_app/features/home/tabs/profile/presentation/screens/profile_tab_screen.dart';
-import 'package:movies_app/features/home/tabs/search/presentation/cubit/search_cubit.dart';
-import 'package:movies_app/features/home/tabs/browse/presentation/screens/browse_tab_screen.dart';
-import 'package:movies_app/features/home/tabs/search/presentation/screens/search_tab_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF121312),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 450,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/bg.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 450,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        const Color(0xFF121312).withOpacity(0.5),
+                        const Color(0xFF121312),
+                      ],
+                    ),
+                  ),
+                ),
+                const Positioned(
+                  bottom: 30,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Available Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Watch Now",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Action",
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "See More +",
+                    style: TextStyle(color: Color(0xFFFFBB3B), fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 220,
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return const MovieItemCard();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1A1A1A),
+        selectedItemColor: const Color(0xFFFFBB3B),
+        unselectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/home.png', width: 24, height: 24),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/search.png', width: 24, height: 24),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/explore.png', width: 24, height: 24),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/profile.png', width: 24, height: 24),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  final _tabs = const [
-    HomeTabScreen(),
-    SearchTabScreen(),
-    BrowseTabScreen(),
-    ProfileTabScreen(),
-  ];
+class MovieItemCard extends StatelessWidget {
+  const MovieItemCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => sl<HomeCubit>()..getMovies()),
-        BlocProvider(create: (_) => sl<SearchCubit>()),
-      ],
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _tabs,
-        ),
-        bottomNavigationBar: NavigationBar(
-          backgroundColor: AppColors.surface,
-          indicatorColor: AppColors.primary.withOpacity(0.2),
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (index) =>
-              setState(() => _selectedIndex = index),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded, color: AppColors.primary),
-              label: 'Home',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.search_outlined),
-              selectedIcon:
-                  Icon(Icons.search_rounded, color: AppColors.primary),
-              label: 'Search',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_outlined),
-              selectedIcon:
-                  Icon(Icons.grid_view_rounded, color: AppColors.primary),
-              label: 'Browse',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon:
-                  Icon(Icons.person_rounded, color: AppColors.primary),
-              label: 'Profile',
-            ),
-          ],
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 15),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.asset(
+          'assets/images/bg.png',
+          height: 210,
+          width: 140,
+          fit: BoxFit.cover,
         ),
       ),
     );
