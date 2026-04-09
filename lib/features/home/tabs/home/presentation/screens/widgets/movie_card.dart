@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/features/home/tabs/home/domain/entities/movie_entity.dart';
 
+import '../../../../../../../core/constants/api_constants.dart';
+
 class MovieCard extends StatelessWidget {
   final MovieEntity movie;
   final VoidCallback onTap;
@@ -24,39 +26,17 @@ class MovieCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.all( Radius.circular(16.r)),
                 child: CachedNetworkImage(
-                  imageUrl: movie.largeCoverImage,
+                  imageUrl: movie.largeCoverImage.isNotEmpty
+                ? movie.largeCoverImage
+                    : movie.backgroundImage,
                   fit: BoxFit.cover,
                   width: double.infinity,
-                //  placeholder: (_, __) => Container(
-                 //   color: AppColors.shimmerBase,
-                  //  child: const Center(
-                   //   child: Icon(Icons.movie, color: AppColors.hint),
+                    height: double.infinity,
+                    errorWidget: (_, __, ___) => Image.network(ApiConstants.urlBImage)
                     ),
                   ),
-               //   errorWidget: (_, __, ___) => Container(
-                //    color: AppColors.shimmerBase,
-                //    child:
-                  //      const Icon(Icons.broken_image, color: AppColors.hint),
                   ),
 
-
-
-          /*  Padding(
-              padding: EdgeInsets.all(8.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    movie.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),*/
                   Container(
                     margin: EdgeInsets.only(top: 9,left: 6),
                     padding: EdgeInsets.symmetric(vertical: 3,horizontal: 5),
@@ -74,13 +54,6 @@ class MovieCard extends StatelessWidget {
                         SizedBox(width: 2.w),
                         Icon(Icons.star_rounded,
                             size: 16.sp, color: AppColors.primary),
-
-                       // const Spacer(),
-                     /*   Text(
-                          movie.year,
-                          style: TextStyle(
-                              fontSize: 11.sp, color: AppColors.textSecondary),
-                        ),*/
                       ],
                     ),
                   ),

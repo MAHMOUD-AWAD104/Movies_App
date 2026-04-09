@@ -2,11 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:movies_app/core/constants/api_constants.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/di/injection_container.dart';
 import 'package:movies_app/features/home/movie_details/presentation/cubit/movie_details_cubit.dart';
+import 'package:movies_app/features/home/movie_details/presentation/widgets/cast_item.dart';
+import 'package:movies_app/features/home/movie_details/presentation/widgets/genre_item.dart';
 import 'package:movies_app/features/home/tabs/home/domain/entities/movie_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../tabs/home/presentation/screens/widgets/movie_card.dart';
+
 
 class MovieDetailsScreen extends StatelessWidget {
   final int movieId;
@@ -23,6 +30,7 @@ class MovieDetailsScreen extends StatelessWidget {
 }
 
 class _MovieDetailsView extends StatelessWidget {
+
   const _MovieDetailsView();
 
   @override
@@ -36,95 +44,232 @@ class _MovieDetailsView extends StatelessWidget {
           );
         }
         else if (state is MovieDetailsError) {
-         // return Scaffold(
-        //    backgroundColor: AppColors.background,
-       //     body:
               return Center(child: Text(state.message));
-       //   );
         }
         else if (state is MovieDetailsLoaded) {
           final movie = state.movie;
-        //  return Scaffold(
-        //    backgroundColor: AppColors.background,
-            return CustomScrollView(
-              slivers: [
-                _MovieAppBar(movie: movie),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.r),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(movie.title,
-                            style: Theme.of(context).textTheme.headlineMedium),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            Icon(Icons.star_rounded,
-                                color: AppColors.secondary, size: 18.sp),
-                            SizedBox(width: 4.w),
-                            Text(
-                              '${movie.rating}/10',
-                              style: TextStyle(
-                                color: AppColors.secondary,
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
+
+          return CustomScrollView(
+            slivers: [
+              _MovieAppBar(movie: movie),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(movie.title,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headlineMedium),
+                      ),
+                      SizedBox(height: 8.h),
+                      Center(
+                        child: Text(movie.year,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge),
+                      ),
+                      SizedBox(height: 8.h),
+                      ElevatedButton(onPressed: () {},
+                          style:
+                          ElevatedButton.styleFrom(backgroundColor: AppColors
+                              .red),
+                          child: Text('Watch', style: Theme
+                              .of(context)
+                              .textTheme
+                              .headlineMedium,)
+                      ),
+                      SizedBox(height: 8.h),
+
+                      Row(
+                        spacing: 10,
+                        children: [
+                          Expanded(
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/heart.svg', width: 25,
+                                      height: 25,),
+                                    const SizedBox(width: 10,),
+                                    Text(movie.likerCount.toString(),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleLarge,),
+                                  ],
+                                )
                             ),
-                            SizedBox(width: 16.w),
-                            Icon(Icons.calendar_today_outlined,
-                                color: AppColors.hint, size: 14.sp),
-                            SizedBox(width: 4.w),
-                            Text(movie.year,
-                                style: Theme.of(context).textTheme.bodySmall),
-                            SizedBox(width: 16.w),
-                            Icon(Icons.timer_outlined,
-                                color: AppColors.hint, size: 14.sp),
-                            SizedBox(width: 4.w),
-                            Text('${movie.runtime} min',
-                                style: Theme.of(context).textTheme.bodySmall),
-                          ],
+                          ),
+                          Expanded(
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/time.svg', width: 25,
+                                      height: 25,),
+                                    const SizedBox(width: 10,),
+                                    Text(movie.runtime.toString(),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleLarge,),
+                                  ],
+                                )
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/star.svg', width: 25,
+                                      height: 25,),
+                                    const SizedBox(width: 10,),
+                                    Text(movie.rating.toString(),
+                                      style: Theme
+                                          .of(context)
+                                          .textTheme
+                                          .titleLarge,),
+                                  ],
+                                )
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      Text('Screen Shots', style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,),
+                      SizedBox(height: 8.h),
+                      SizedBox(
+                        height: 170,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(16.r)),
+                          child: CachedNetworkImage(imageUrl: movie.screenShot1,
+                            fit: BoxFit.cover,),
                         ),
-                        SizedBox(height: 12.h),
-                        Wrap(
-                          spacing: 8.w,
-                          children: movie.genres
-                              .map((g) => Chip(
-                                    label: Text(g,
-                                        style: TextStyle(
-                                            fontSize: 12.sp,
-                                            color: AppColors.white)),
-                                    backgroundColor:
-                                        AppColors.primary.withOpacity(0.2),
-                                    side: const BorderSide(
-                                        color: AppColors.primary),
-                                    padding: EdgeInsets.zero,
-                                  ))
-                              .toList(),
+                      ), SizedBox(height: 8.h),
+                      SizedBox(
+                        height: 170,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(16.r)),
+                          child: CachedNetworkImage(imageUrl: movie.screenShot2,
+                            fit: BoxFit.cover,),
                         ),
-                        SizedBox(height: 20.h),
-                        Text('Story',
-                            style: Theme.of(context).textTheme.headlineSmall),
-                        SizedBox(height: 8.h),
-                        Text(
-                          movie.descriptionFull.isNotEmpty
-                              ? movie.descriptionFull
-                              : movie.summary,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                      ), SizedBox(height: 8.h),
+                      SizedBox(
+                        height: 170,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(16.r)),
+                          child: CachedNetworkImage(imageUrl: movie.screenShot3,
+                            fit: BoxFit.fill,),
                         ),
-                        SizedBox(height: 24.h),
-                        Text('Available Torrents',
-                            style: Theme.of(context).textTheme.headlineSmall),
-                        SizedBox(height: 12.h),
-                        ...movie.torrents.map((t) => _TorrentCard(torrent: t)),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 8,),
+                      Text('Similar', style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge),
+                      const SizedBox(height: 8,),
+
+                    ],),
+                ),),
+              SliverPadding(
+               padding: const EdgeInsets.symmetric(horizontal: 16),
+               sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.65,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,),
+                  delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                        final suggestMovie = state.suggestions[index];
+                        return MovieCard(
+                          key: ValueKey(suggestMovie.id),
+                            movie: suggestMovie,
+                            onTap: () {});
+                      },
+                      childCount: state.suggestions.length),
+                ),
+             ),
+              SliverToBoxAdapter(
+                child: Padding(padding: const EdgeInsets.only(left: 16,right: 16, bottom: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Summary',style:Theme
+                      .of(context)
+                      .textTheme
+                      .titleLarge,),
+                      const SizedBox(height: 10,),
+                      Text(state.movie.descriptionFull,style: Theme.of(context).textTheme.bodyLarge,),
+                      const SizedBox(height: 8,),
+                      Text('Cast',style:Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,),
+
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (_, index) => CastItem(cast: movie.casting[index]),
+                        separatorBuilder: (_, index) => const SizedBox(height: 8),
+                        itemCount: movie.casting.length,
+                      ),
+                      Text('Genres',style:Theme
+                             .of(context)
+                             .textTheme
+                             .titleLarge,),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: movie.genres.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                          childAspectRatio: 3,
+                        ),
+                        itemBuilder: (_, index) {
+                          return GenreItem(
+                            genre: movie.genres[index],
+                          );
+                        },
+                      )
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+
+            ],
           );
         }
+
         else
         return const SizedBox.shrink();
       },
@@ -134,112 +279,62 @@ class _MovieDetailsView extends StatelessWidget {
 
 class _MovieAppBar extends StatelessWidget {
   final MovieEntity movie;
+
   const _MovieAppBar({required this.movie});
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 350.h,
-      pinned: true,
+      actionsPadding: const EdgeInsets.only(right: 20),
+      leadingWidth: 25,
+      expandedHeight: 500.h,
+      pinned: false,
       backgroundColor: AppColors.background,
-      leading: IconButton(
-        icon: Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(
-            color: AppColors.background.withOpacity(0.7),
-            shape: BoxShape.circle,
+      leading: GestureDetector(
+          child: Container(
+            width: 20,
+            padding: const EdgeInsets.only(left: 10.0),
+            child: SvgPicture.asset('assets/icons/barrow.svg',),
           ),
-          child: const Icon(Icons.arrow_back, color: AppColors.white),
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
+      onTap: () {
+            Navigator.of(context).pop();
+      }),
+      actions: [GestureDetector(
+          child: SvgPicture.asset('assets/icons/watchlater.svg',),
+        onTap: (){
+
+        },)],
       flexibleSpace: FlexibleSpaceBar(
-        background: CachedNetworkImage(
-          imageUrl: movie.backgroundImage.isNotEmpty
-              ? movie.backgroundImage
-              : movie.largeCoverImage,
-          fit: BoxFit.cover,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  AppColors.background.withOpacity(0.4),
-                  BlendMode.darken,
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            CachedNetworkImage(
+              imageUrl:movie.largeCoverImage.isNotEmpty
+                  ? movie.largeCoverImage
+                  : movie.backgroundImage,
+              fit: BoxFit.fill,
+                errorWidget: (_, __, ___) => Image.network(ApiConstants.urlBImage)),
+            Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.7,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.9),
+                  ],
                 ),
               ),
             ),
-          ),
+
+            Center(
+              child: Image.asset('assets/icons/play.png'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _TorrentCard extends StatelessWidget {
-  final TorrentEntity torrent;
-  const _TorrentCard({required this.torrent});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.r),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-            child: Text(
-              torrent.quality,
-              style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600),
-            ),
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(torrent.type,
-                    style: TextStyle(color: AppColors.white, fontSize: 13.sp)),
-                Text(torrent.size,
-                    style: Theme.of(context).textTheme.bodySmall),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Icon(Icons.arrow_upward, color: Colors.green, size: 14.sp),
-              Text('${torrent.seeds}',
-                  style: TextStyle(color: Colors.green, fontSize: 12.sp)),
-              SizedBox(width: 8.w),
-              Icon(Icons.arrow_downward, color: AppColors.error, size: 14.sp),
-              Text('${torrent.peers}',
-                  style: TextStyle(color: AppColors.error, fontSize: 12.sp)),
-              SizedBox(width: 12.w),
-              GestureDetector(
-                onTap: () async {
-                  final uri = Uri.parse(torrent.url);
-                  if (await canLaunchUrl(uri)) launchUrl(uri);
-                },
-                child: Icon(Icons.download_rounded,
-                    color: AppColors.primary, size: 22.sp),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
