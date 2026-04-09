@@ -16,6 +16,12 @@ class MovieEntity extends Equatable {
   final String largeCoverImage;
   final String state;
   final List<TorrentEntity> torrents;
+  final int likerCount;
+  final String screenShot1;
+  final String screenShot2;
+  final String screenShot3;
+  final List<CastEntity> casting;
+
 
   const MovieEntity({
     required this.id,
@@ -33,10 +39,35 @@ class MovieEntity extends Equatable {
     required this.largeCoverImage,
     required this.state,
     required this.torrents,
+    required this.likerCount,
+    required this.screenShot1,
+    required this.screenShot2,
+    required this.screenShot3,
+    required this.casting,
   });
 
   @override
   List<Object?> get props => [id, title, year, rating];
+}
+
+class CastEntity extends Equatable{
+  final String name;
+  final String characterName;
+  final String urlImage;
+  final String imdbCode;
+
+  const CastEntity({
+    required this.name,
+    required this.characterName,
+    required this.urlImage,
+    required this.imdbCode,
+
+  });
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => throw UnimplementedError();
+
 }
 
 class TorrentEntity extends Equatable {

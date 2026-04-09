@@ -116,6 +116,7 @@ class HomeTabScreen extends StatelessWidget {
                         (context, index) {
                           final movie = state.movies[index];
                           return MovieCard(
+                            key: ValueKey(movie.id),
                             movie: movie,
                             onTap: () => context
                                 .push('${AppRoutes.movieDetails}/${movie.id}'),

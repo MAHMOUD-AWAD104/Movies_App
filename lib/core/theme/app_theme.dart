@@ -9,7 +9,7 @@ class AppTheme {
         primaryColor: AppColors.primary,
         colorScheme: const ColorScheme.dark(
           primary: AppColors.primary,
-          secondary: AppColors.secondary,
+          secondary: AppColors.red,
           background: AppColors.background,
           surface: AppColors.surface,
           error: AppColors.error,
@@ -61,6 +61,7 @@ class AppTheme {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: AppColors.surface,
+            elevation: 0,
             minimumSize: Size(double.infinity, 52.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.r),
@@ -73,6 +74,10 @@ class AppTheme {
           ),
         ),
         textTheme: TextTheme(
+          titleLarge: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.white),
           headlineLarge: TextStyle(
               fontSize: 28.sp,
               fontWeight: FontWeight.w700,

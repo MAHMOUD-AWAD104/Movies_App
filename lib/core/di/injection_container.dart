@@ -75,8 +75,22 @@ void _initHome() {
       () => SearchRepoImpl(apiClient: sl(), networkInfo: sl()));
 
   // Movie Details
-  sl.registerFactory(() => MovieDetailsCubit(getMovieDetailsUseCase: sl()));
-  sl.registerLazySingleton(() => GetMovieDetailsUseCase(sl()));
+  sl.registerFactory(
+        () => MovieDetailsCubit(
+      getMovieDetailsUseCase: sl(),
+      getMovieSuggestionsUseCase: sl(),
+    ),
+  );
+
+  sl.registerLazySingleton<GetMovieDetailsUseCase>(
+        () => GetMovieDetailsUseCase(sl()),
+  );
+
+  sl.registerLazySingleton<GetMovieSuggestionsUseCase>(
+        () => GetMovieSuggestionsUseCase(sl()),
+  );
+
   sl.registerLazySingleton<MovieDetailsRepo>(
-      () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()));
+        () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 }

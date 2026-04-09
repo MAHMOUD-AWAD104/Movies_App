@@ -9,6 +9,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 
+
+
   await di.init();
   runApp(const MoviesApp());
 }
