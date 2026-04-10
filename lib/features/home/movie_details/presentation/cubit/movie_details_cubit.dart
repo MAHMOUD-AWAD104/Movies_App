@@ -32,18 +32,36 @@ class MovieDetailsError extends MovieDetailsState {
 
 class MovieDetailsCubit extends Cubit<MovieDetailsState> {
   final GetMovieDetailsUseCase getMovieDetailsUseCase;
+  final GetMovieSuggestionsUseCase getMovieSuggestionsUseCase;
 
-  MovieDetailsCubit({required this.getMovieDetailsUseCase})
+  MovieDetailsCubit({required this.getMovieDetailsUseCase,
+  required this.getMovieSuggestionsUseCase})
       : super(MovieDetailsInitial());
 
   Future<void> getMovieDetails(int movieId) async {
     emit(MovieDetailsLoading());
 
-    final result = await getMovieDetailsUseCase(movieId);
+    final detailsResult = await getMovieDetailsUseCase(movieId);
+    final suggestionsResult = await getMovieSuggestionsUseCase(movieId);
 
-    result.fold(
-      (failure) => emit(MovieDetailsError(message: failure.message)),
-      (movie) => emit(MovieDetailsLoaded(movie: movie)),
+    detailsResult.fold(
+            (failure) => emit(MovieDetailsError(message: failure.message)),
+            (movie) {
+          suggestionsResult.fold(
+                (_) => emit(
+              MovieDetailsLoaded(
+                movie: movie,
+                suggestions: const [],
+              ),
+            ),
+                (suggestions) => emit(
+              MovieDetailsLoaded(
+                movie: movie,
+                suggestions: suggestions,
+              ),
+            ),
+          );
+        }
     );
   }
 }

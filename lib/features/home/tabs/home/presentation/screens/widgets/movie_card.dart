@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/features/home/tabs/home/domain/entities/movie_entity.dart';
 
+import '../../../../../../../core/constants/api_constants.dart';
+
 class MovieCard extends StatelessWidget {
   final MovieEntity movie;
   final VoidCallback onTap;
@@ -16,67 +18,40 @@ class MovieCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16.r),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+                borderRadius: BorderRadius.all(Radius.circular(16.r)),
                 child: CachedNetworkImage(
-                  imageUrl: movie.largeCoverImage,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  placeholder: (_, __) => Container(
-                    color: AppColors.shimmerBase,
-                    child: const Center(
-                      child: Icon(Icons.movie, color: AppColors.hint),
-                    ),
-                  ),
-                  errorWidget: (_, __, ___) => Container(
-                    color: AppColors.shimmerBase,
-                    child:
-                        const Icon(Icons.broken_image, color: AppColors.hint),
-                  ),
-                ),
+                    imageUrl: movie.largeCoverImage.isNotEmpty
+                        ? movie.largeCoverImage
+                        : movie.backgroundImage,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                    errorWidget: (_, __, ___) =>
+                        Image.network(ApiConstants.urlBImage)),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(8.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Container(
+              margin: EdgeInsets.only(top: 9, left: 6),
+              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: AppColors.background.withOpacity(0.8)),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    movie.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
+                    movie.rating.toStringAsFixed(1),
+                    style: TextStyle(color: AppColors.white, fontSize: 16.sp),
                   ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    children: [
-                      Icon(Icons.star_rounded,
-                          size: 14.sp, color: AppColors.primary),
-                      SizedBox(width: 4.w),
-                      Text(
-                        movie.rating.toStringAsFixed(1),
-                        style: TextStyle(
-                            color: AppColors.primary, fontSize: 12.sp),
-                      ),
-                      const Spacer(),
-                      Text(
-                        movie.year,
-                        style: TextStyle(
-                            fontSize: 11.sp, color: AppColors.textSecondary),
-                      ),
-                    ],
-                  ),
+                  SizedBox(width: 2.w),
+                  Icon(Icons.star_rounded,
+                      size: 16.sp, color: AppColors.primary),
                 ],
               ),
             ),

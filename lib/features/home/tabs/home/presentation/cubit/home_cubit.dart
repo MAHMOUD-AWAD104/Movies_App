@@ -55,4 +55,11 @@ class HomeCubit extends Cubit<HomeState> {
       },
     );
   }
+
+  Future<List> getMoviesByGenre({required String genre}) async {
+    final result = await getMoviesUseCase(
+      GetMoviesParams(page: 1, genre: genre, limit: 50),
+    );
+    return result.fold((_) => [], (movies) => movies);
+  }
 }

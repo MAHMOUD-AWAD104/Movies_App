@@ -6,6 +6,7 @@ import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/routes/app_router.dart';
 import 'package:movies_app/features/home/tabs/home/presentation/screens/widgets/movie_card.dart';
 import 'package:movies_app/features/home/tabs/search/presentation/cubit/search_cubit.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SearchTabScreen extends StatefulWidget {
   const SearchTabScreen({super.key});
@@ -45,7 +46,11 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                 style: const TextStyle(color: AppColors.white),
                 decoration: InputDecoration(
                   hintText: 'Search movies...',
-                  prefixIcon: const Icon(Icons.search, color: AppColors.hint),
+                  prefixIcon: SvgPicture.asset(
+                    'assets/icons/search.svg',
+                    width: 10,
+                    height: 5,
+                  ),
                   suffixIcon: _searchCtrl.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, color: AppColors.hint),
@@ -67,11 +72,11 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.search_rounded,
-                              size: 80.sp, color: AppColors.hint),
+                          Image.asset(
+                            'assets/images/popcorn.png',
+                            width: 150.w,
+                          ),
                           SizedBox(height: 16.h),
-                          Text('Search for your favorite movie',
-                              style: Theme.of(context).textTheme.bodyMedium),
                         ],
                       ),
                     );

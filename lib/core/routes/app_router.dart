@@ -6,6 +6,7 @@ import 'package:movies_app/features/home/movie_details/presentation/screens/movi
 import 'package:movies_app/features/home/presentation/screens/home_screen.dart';
 import 'package:movies_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:movies_app/features/splash/presentation/screens/splash_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppRouter {
   static final router = GoRouter(

@@ -85,20 +85,20 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 16.w, vertical: 8.h),
                         decoration: BoxDecoration(
-                          color: isSelected ? color : AppColors.surface,
-                          borderRadius: BorderRadius.circular(20.r),
+                          color: isSelected ? color : AppColors.background,
+                          borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color: isSelected ? color : AppColors.primary,
+                            color: color,
                           ),
                         ),
                         child: Text(
                           genre,
                           style: TextStyle(
-                            color:
-                                isSelected ? Colors.black : AppColors.primary,
-                            fontSize: 13.sp,
-                            fontWeight:
-                                isSelected ? FontWeight.w600 : FontWeight.w600,
+                            color: isSelected
+                                ? AppColors.background
+                                : AppColors.primary,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -108,7 +108,7 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
               ),
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: 25.h),
 
             // Movies Grid
             Expanded(
@@ -130,17 +130,19 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
 
                   if (state is HomeLoaded) {
                     return GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.65,
-                        crossAxisSpacing: 12.w,
-                        mainAxisSpacing: 12.h,
+                        crossAxisSpacing: 8.w,
+                        mainAxisSpacing: 8.h,
                       ),
                       itemCount: state.movies.length,
                       itemBuilder: (context, index) {
                         final movie = state.movies[index];
                         return MovieCard(
+                          key: ValueKey(movie.id),
                           movie: movie,
                           onTap: () => context.push(
                             '${AppRoutes.movieDetails}/${movie.id}',
