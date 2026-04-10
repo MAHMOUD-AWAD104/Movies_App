@@ -88,16 +88,17 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
                           color: isSelected ? color : AppColors.background,
                           borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color:  color ,
+                            color: color,
                           ),
                         ),
                         child: Text(
                           genre,
                           style: TextStyle(
-                            color:
-                                isSelected ? AppColors.background : AppColors.primary,
+                            color: isSelected
+                                ? AppColors.background
+                                : AppColors.primary,
                             fontSize: 20.sp,
-                            fontWeight: FontWeight.w700 ,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -129,7 +130,8 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
 
                   if (state is HomeLoaded) {
                     return GridView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w , vertical: 0),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 0),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.65,

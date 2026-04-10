@@ -9,7 +9,6 @@ import 'package:movies_app/features/splash/presentation/screens/splash_screen.da
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppRouter {
-
   static final router = GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
