@@ -10,22 +10,8 @@ import 'package:movies_app/features/home/tabs/search/presentation/cubit/search_c
 import 'package:movies_app/features/home/tabs/browse/presentation/screens/browse_tab_screen.dart';
 import 'package:movies_app/features/home/tabs/search/presentation/screens/search_tab_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
-  final _tabs = const [
-    HomeTabScreen(),
-    SearchTabScreen(),
-    BrowseTabScreen(),
-    ProfileTabScreen(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +66,53 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF1A1A1A),
+        selectedItemColor: const Color(0xFFFFBB3B),
+        unselectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/home.png', width: 24, height: 24),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/search.png', width: 24, height: 24),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/explore.png', width: 24, height: 24),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset('assets/icons/profile.png', width: 24, height: 24),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MovieItemCard extends StatelessWidget {
+  const MovieItemCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 15),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.asset(
+          'assets/images/bg.png',
+          height: 210,
+          width: 140,
+          fit: BoxFit.cover,
         ),
       ),
     );
