@@ -12,6 +12,7 @@ class RegisterUseCase {
       username: params.username,
       email: params.email,
       password: params.password,
+      phone: params.phone,
     );
   }
 }
@@ -20,9 +21,11 @@ class RegisterParams {
   final String username;
   final String email;
   final String password;
+  final String phone;
   const RegisterParams({
     required this.username,
     required this.email,
     required this.password,
+    required this.phone
   });
 }

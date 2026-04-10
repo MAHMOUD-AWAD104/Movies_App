@@ -50,9 +50,20 @@ class MovieDetailsRepoImpl implements MovieDetailsRepo {
         queryParameters: {'movie_id': movieId},
       );
 
-      final movies = (response.data['data']['movies'] as List<dynamic>? ?? [])
-          .map((m) => MovieModel.fromJson(m))
-          .toList();
+      //final movies = (response.data['data']['movies'] as List<dynamic>? ?? [])
+        //  .map((m) => MovieModel.fromJson(m))
+        //  .toList();
+
+      print(response.data['data']['movies'].length);
+      print(response.data['data']['movies'][0]);
+
+      final rawmovies = response.data['data']['movies'] as List<dynamic>? ??[];
+      print('movies length:${rawmovies.length}');
+      final movies = rawmovies.map((m){
+        print('movie json = $m');
+        return MovieModel.fromJson(m);
+      }).toList();
+      print('parsed movies length=${movies.length}');
 
       return Right(movies);
     } catch (e) {
