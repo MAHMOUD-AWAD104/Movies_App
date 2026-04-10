@@ -319,8 +319,8 @@ class _MovieAppBarState extends State<_MovieAppBar> {
             colorFilter: ColorFilter.mode(isSaved
                 ? AppColors.primary: AppColors.white, BlendMode.srcIn),),
         onTap: (){
-            isSaved != isSaved;
             setState(() {
+              isSaved = !isSaved;
             });
 
         },)],

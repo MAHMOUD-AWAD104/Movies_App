@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movies_app/core/constants/api_constants.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/routes/app_router.dart';
 import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_cubit.dart';
@@ -131,6 +132,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
               featured[_currentIndex].largeCoverImage,
               key: ValueKey(featured[_currentIndex].id),
               fit: BoxFit.cover,
+              width: double.infinity,
             ),
           ),
 
@@ -193,6 +195,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
+                                errorBuilder: (_,__,___) => Image.network(ApiConstants.urlBImage) ,
                               ),
                             ),
                             Positioned(
@@ -356,6 +359,7 @@ class _GenreSectionContentState extends State<_GenreSectionContent> {
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
+                          errorBuilder: (_,__,___) => Center(child: Image.network(ApiConstants.urlBImage)),
                         ),
                       ),
                       Positioned(
