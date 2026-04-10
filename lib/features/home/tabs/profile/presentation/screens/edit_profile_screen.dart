@@ -101,15 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             const SizedBox(height: 20),
             GestureDetector(
               onTap: _showAvatarPicker,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage(selectedAvatar),
-                  ),
-                ],
-              ),
+              child: Image.asset(selectedAvatar)
             ),
             const SizedBox(height: 40),
             _buildTextField(Icons.person, "John Safwat"),

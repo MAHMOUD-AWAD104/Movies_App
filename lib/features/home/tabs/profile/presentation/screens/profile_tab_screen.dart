@@ -16,15 +16,15 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Row(
               children: [
-                Column(
+                const Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 45,
                       backgroundColor: Colors.transparent,
                       backgroundImage: AssetImage('assets/images/avatar1.png'),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
+                    SizedBox(height: 8),
+                    Text(
                       "John Safwat",
                       style: TextStyle(
                           color: Colors.white,
@@ -142,36 +142,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFF282A28),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-                icon: const Icon(Icons.home, color: Colors.white),
-                onPressed: () {}),
-            IconButton(
-                icon: const Icon(Icons.search, color: Colors.white),
-                onPressed: () {}),
-            IconButton(
-                icon: const Icon(Icons.explore, color: Colors.white),
-                onPressed: () {}),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: const BoxDecoration(
-                color: Color(0xFFFFBB3B),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.person, color: Colors.black),
-            ),
-          ],
-        ),
-      ),
+
     );
   }
 
