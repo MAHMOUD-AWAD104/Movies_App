@@ -9,172 +9,6 @@ import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_state
 import 'widgets/movie_card.dart';
 import 'widgets/movie_shimmer.dart';
 
-// class HomeTabScreen extends StatelessWidget {
-//   const HomeTabScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.background,
-//       body: SafeArea(
-//         child: CustomScrollView(
-//           slivers: [
-//             SliverToBoxAdapter(
-//               child: Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Text('Good Evening 👋',
-//                             style: Theme.of(context).textTheme.bodyMedium),
-//                         Text('Discover Movies',
-//                             style: Theme.of(context).textTheme.headlineMedium),
-//                       ],
-//                     ),
-//                     CircleAvatar(
-//                       radius: 22.r,
-//                       backgroundColor: AppColors.primary,
-//                       child: const Icon(Icons.person, color: AppColors.white),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//             SliverToBoxAdapter(
-//               child: SizedBox(
-//                 height: 40.h,
-//                 child: ListView(
-//                   scrollDirection: Axis.horizontal,
-//                   padding: EdgeInsets.symmetric(horizontal: 20.w),
-//                   children: [
-//                     'All',
-//                     'Action',
-//                     'Comedy',
-//                     'Drama',
-//                     'Horror',
-//                     'Romance',
-//                     'Sci-Fi',
-//                     'Animation'
-//                   ].map((genre) => _GenreChip(genre: genre)).toList(),
-//                 ),
-//               ),
-//             ),
-//             SliverPadding(
-//               padding: EdgeInsets.all(16.r),
-//               sliver: BlocBuilder<HomeCubit, HomeState>(
-//                 builder: (context, state) {
-//                   if (state is HomeLoading) {
-//                     return SliverGrid(
-//                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                         crossAxisCount: 2,
-//                         childAspectRatio: 0.65,
-//                         crossAxisSpacing: 12.w,
-//                         mainAxisSpacing: 12.h,
-//                       ),
-//                       delegate: SliverChildBuilderDelegate(
-//                         (_, __) => const MovieShimmer(),
-//                         childCount: 6,
-//                       ),
-//                     );
-//                   }
-
-//                   if (state is HomeError) {
-//                     return SliverToBoxAdapter(
-//                       child: Center(
-//                         child: Column(
-//                           children: [
-//                             SizedBox(height: 40.h),
-//                             Icon(Icons.error_outline,
-//                                 size: 48.sp, color: AppColors.error),
-//                             SizedBox(height: 12.h),
-//                             Text(state.message,
-//                                 style: Theme.of(context).textTheme.bodyMedium),
-//                             SizedBox(height: 16.h),
-//                             ElevatedButton(
-//                               onPressed: () =>
-//                                   context.read<HomeCubit>().getMovies(),
-//                               child: const Text('Retry'),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     );
-//                   }
-
-//                   if (state is HomeLoaded) {
-//                     return SliverGrid(
-//                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                         crossAxisCount: 2,
-//                         childAspectRatio: 0.65,
-//                         crossAxisSpacing: 12.w,
-//                         mainAxisSpacing: 12.h,
-//                       ),
-//                       delegate: SliverChildBuilderDelegate(
-//                         (context, index) {
-//                           final movie = state.movies[index];
-//                           return MovieCard(
-//                             key: ValueKey(movie.id),
-//                             movie: movie,
-//                             onTap: () => context
-//                                 .push('${AppRoutes.movieDetails}/${movie.id}'),
-//                           );
-//                         },
-//                         childCount: state.movies.length,
-//                       ),
-//                     );
-//                   }
-
-//                   return const SliverToBoxAdapter(child: SizedBox.shrink());
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// class _GenreChip extends StatefulWidget {
-//   final String genre;
-//   const _GenreChip({required this.genre});
-
-//   @override
-//   State<_GenreChip> createState() => _GenreChipState();
-// }
-
-// class _GenreChipState extends State<_GenreChip> {
-//   bool _selected = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.only(right: 8.w),
-//       child: FilterChip(
-//         selected: _selected,
-//         label: Text(widget.genre),
-//         labelStyle: TextStyle(
-//           color: _selected ? AppColors.white : AppColors.textSecondary,
-//           fontSize: 13.sp,
-//         ),
-//         backgroundColor: AppColors.surface,
-//         selectedColor: AppColors.primary,
-//         checkmarkColor: AppColors.white,
-//         side: BorderSide.none,
-//         onSelected: (value) {
-//           setState(() => _selected = value);
-//           context.read<HomeCubit>().getMovies(
-//                 genre: value && widget.genre != 'All' ? widget.genre : null,
-//               );
-//         },
-//       ),
-//     );
-//   }
-// }
-
 class HomeTabScreen extends StatefulWidget {
   const HomeTabScreen({super.key});
 
@@ -271,125 +105,6 @@ class _FeaturedSection extends StatefulWidget {
   State<_FeaturedSection> createState() => _FeaturedSectionState();
 }
 
-// class _FeaturedSectionState extends State<_FeaturedSection> {
-//   final _pageController = PageController(viewportFraction: 0.7);
-//   int _currentIndex = 0;
-
-//   @override
-//   void dispose() {
-//     _pageController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final featured = widget.movies.take(5).toList();
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         SizedBox(height: 20.h),
-//         Center(
-//           child: Text(
-//             'Available Now',
-//             style: TextStyle(
-//               color: AppColors.white,
-//               fontSize: 28.sp,
-//               fontWeight: FontWeight.w900,
-//               fontStyle: FontStyle.italic,
-//               shadows: [
-//                 Shadow(
-//                   color: Colors.black.withOpacity(0.5),
-//                   blurRadius: 10,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//         SizedBox(height: 12.h),
-//         SizedBox(
-//           height: 330.h,
-//           child: PageView.builder(
-//             controller: _pageController,
-//             onPageChanged: (i) => setState(() => _currentIndex = i),
-//             itemCount: featured.length,
-//             itemBuilder: (context, index) {
-//               final movie = featured[index];
-//               final isActive = index == _currentIndex;
-//               return AnimatedContainer(
-//                 duration: const Duration(milliseconds: 300),
-//                 margin: EdgeInsets.symmetric(
-//                   horizontal: 8.w,
-//                   vertical: isActive ? 0 : 20.h,
-//                 ),
-//                 child: GestureDetector(
-//                   onTap: () =>
-//                       context.push('${AppRoutes.movieDetails}/${movie.id}'),
-//                   child: Stack(
-//                     children: [
-//                       ClipRRect(
-//                         borderRadius: BorderRadius.circular(16.r),
-//                         child: Image.network(
-//                           movie.largeCoverImage,
-//                           fit: BoxFit.cover,
-//                           width: double.infinity,
-//                           height: double.infinity,
-//                         ),
-//                       ),
-//                       Positioned(
-//                         top: 8.h,
-//                         left: 8.w,
-//                         child: Container(
-//                           padding: EdgeInsets.symmetric(
-//                               horizontal: 8.w, vertical: 4.h),
-//                           decoration: BoxDecoration(
-//                             color: Colors.black.withOpacity(0.7),
-//                             borderRadius: BorderRadius.circular(8.r),
-//                           ),
-//                           child: Row(
-//                             children: [
-//                               Icon(Icons.star_rounded,
-//                                   color: AppColors.primary, size: 14.sp),
-//                               SizedBox(width: 4.w),
-//                               Text(
-//                                 movie.rating.toString(),
-//                                 style: TextStyle(
-//                                     color: AppColors.white, fontSize: 12.sp),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//         SizedBox(height: 16.h),
-//         Center(
-//           child: Text(
-//             'Watch Now',
-//             style: TextStyle(
-//               color: AppColors.white,
-//               fontSize: 28.sp,
-//               fontWeight: FontWeight.w900,
-//               fontStyle: FontStyle.italic,
-//               shadows: [
-//                 Shadow(
-//                   color: Colors.black.withOpacity(0.5),
-//                   blurRadius: 10,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//         SizedBox(height: 16.h),
-//       ],
-//     );
-//   }
-// }
-
 class _FeaturedSectionState extends State<_FeaturedSection> {
   final _pageController = PageController(viewportFraction: 0.7);
   int _currentIndex = 0;
@@ -409,7 +124,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // 🔥 Background image of focused movie
+          //  Background image of focused movie
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
             child: Image.network(
@@ -419,7 +134,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
             ),
           ),
 
-          // 🔥 Dark overlay
+          //  Dark overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -434,7 +149,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
             ),
           ),
 
-          // 🔥 Main content
+          //  Main content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -445,21 +160,6 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
                   width: 150.w,
                   height: 50.h,
                 ),
-                //   Text(
-                //   'Available Now',
-                //   style: TextStyle(
-                //     color: AppColors.white,
-                //     fontSize: 28.sp,
-                //     fontWeight: FontWeight.w900,
-                //     fontStyle: FontStyle.italic,
-                //     shadows: [
-                //       Shadow(
-                //         color: Colors.black.withOpacity(0.5),
-                //         blurRadius: 10,
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ),
               SizedBox(height: 20.h),
               SizedBox(
@@ -535,23 +235,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
               ),
               SizedBox(height: 20.h),
               Center(
-                child:
-                    //  Text(
-                    //   'Watch Now',
-                    //   style: TextStyle(
-                    //     color: AppColors.white,
-                    //     fontSize: 28.sp,
-                    //     fontWeight: FontWeight.w900,
-                    //     fontStyle: FontStyle.italic,
-                    //     shadows: [
-                    //       Shadow(
-                    //         color: Colors.black.withOpacity(0.5),
-                    //         blurRadius: 10,
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    Image.asset(
+                child: Image.asset(
                   'assets/images/Watch Now.png',
                   width: 150.w,
                   height: 50.h,
