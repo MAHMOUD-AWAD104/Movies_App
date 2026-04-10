@@ -79,7 +79,6 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
 
-              // Bottom section - Route + Supervised
               Padding(
                 padding: EdgeInsets.only(bottom: 48.h),
                 child: Column(
