@@ -6,11 +6,8 @@ import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/routes/app_router.dart';
 import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_cubit.dart';
 import 'package:movies_app/features/home/tabs/home/presentation/cubit/home_state.dart';
-import '../../../../../../core/constants/api_constants.dart';
 import 'widgets/movie_card.dart';
 import 'widgets/movie_shimmer.dart';
-
-
 
 class HomeTabScreen extends StatefulWidget {
   const HomeTabScreen({super.key});
@@ -80,6 +77,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
           if (state is HomeLoaded) {
             return CustomScrollView(
               slivers: [
+                // Featured Movie - Available Now
                 SliverToBoxAdapter(
                   child: _FeaturedSection(movies: state.movies),
                 ),
@@ -107,8 +105,6 @@ class _FeaturedSection extends StatefulWidget {
   State<_FeaturedSection> createState() => _FeaturedSectionState();
 }
 
-
-
 class _FeaturedSectionState extends State<_FeaturedSection> {
   final _pageController = PageController(viewportFraction: 0.7);
   int _currentIndex = 0;
@@ -121,24 +117,24 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
 
   @override
   Widget build(BuildContext context) {
-    final featured = widget.movies.take(6).toList();
+    final featured = widget.movies.take(5).toList();
 
     return SizedBox(
       height: 520.h,
       child: Stack(
         fit: StackFit.expand,
         children: [
+          //  Background image of focused movie
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
             child: Image.network(
               featured[_currentIndex].largeCoverImage,
               key: ValueKey(featured[_currentIndex].id),
               fit: BoxFit.cover,
-              width: double.infinity,
-
             ),
           ),
 
+          //  Dark overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -153,6 +149,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
             ),
           ),
 
+          //  Main content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -160,10 +157,9 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
               Center(
                 child: Image.asset(
                   'assets/images/Available Now.png',
-                  width: double.infinity.w,
-                  height: 60.h,
+                  width: 150.w,
+                  height: 50.h,
                 ),
-
               ),
               SizedBox(height: 20.h),
               SizedBox(
@@ -181,7 +177,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
                       transform: Matrix4.identity()
                         ..scale(isActive ? 1.0 : 0.85),
                       margin: EdgeInsets.symmetric(
-                        horizontal: 12.w,
+                        horizontal: 8.w,
                         vertical: isActive ? 0 : 40.h,
                       ),
                       child: GestureDetector(
@@ -197,8 +193,6 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
-                                errorBuilder: (_, __, ___) =>
-                                    Image.network(ApiConstants.urlBImage) ,
                               ),
                             ),
                             Positioned(
@@ -241,9 +235,7 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
               ),
               SizedBox(height: 20.h),
               Center(
-                child:
-
-                    Image.asset(
+                child: Image.asset(
                   'assets/images/Watch Now.png',
                   width: 150.w,
                   height: 50.h,
@@ -364,7 +356,6 @@ class _GenreSectionContentState extends State<_GenreSectionContent> {
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
-                          errorBuilder: (_,__,___) => Center(child: Image.network(ApiConstants.urlBImage)),
                         ),
                       ),
                       Positioned(
