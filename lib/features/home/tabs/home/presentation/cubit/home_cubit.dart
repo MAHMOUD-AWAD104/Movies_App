@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/features/home/tabs/home/domain/usecases/get_movies_usecase.dart';
+import '../../domain/entities/movie_entity.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -56,7 +57,7 @@ class HomeCubit extends Cubit<HomeState> {
     );
   }
 
-  Future<List> getMoviesByGenre({required String genre}) async {
+  Future<List<MovieEntity>> getMoviesByGenre({required String genre}) async {
     final result = await getMoviesUseCase(
       GetMoviesParams(page: 1, genre: genre, limit: 50),
     );

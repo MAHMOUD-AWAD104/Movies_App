@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _tabs = const [
     HomeTabScreen(),
     SearchTabScreen(),
-    BrowseTabScreen(),
+    BrowseTabScreen(genre: 'Action'),
     ProfileTabScreen(),
   ];
 

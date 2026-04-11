@@ -25,6 +25,7 @@ class MoviesApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       builder: (context, child) {
+        
         return MaterialApp.router(
           title: 'Movies App',
           debugShowCheckedModeBanner: false,
