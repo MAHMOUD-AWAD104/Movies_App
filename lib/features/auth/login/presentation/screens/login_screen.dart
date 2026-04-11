@@ -7,7 +7,6 @@ import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/di/injection_container.dart';
 import 'package:movies_app/core/routes/app_router.dart';
 import 'package:movies_app/features/auth/login/presentation/cubit/login_cubit.dart';
-
 import '../../../register/presentation/widgets/default_text_form_field.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -33,7 +32,6 @@ class _LoginViewState extends State<_LoginView> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _obscurePassword = true;
   int selectedIndex = 0;
 
   @override
@@ -52,7 +50,9 @@ class _LoginViewState extends State<_LoginView> {
         } else if (state is LoginFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(state.message), backgroundColor: AppColors.error),
+              content: Text(state.message),
+              backgroundColor: AppColors.error,
+            ),
           );
         }
       },
@@ -64,36 +64,47 @@ class _LoginViewState extends State<_LoginView> {
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 30.h),
-                  Center(child: Image.asset('assets/images/logo2.png',width: 100,height: 100,)),
+                  Center(
+                    child: Image.asset(
+                      'assets/images/logo2.png',
+                      width: 120.w,
+                      height: 120.h,
+                    ),
+                  ),
                   SizedBox(height: 50.h),
                   DefaultTextFormField(
-                    hintText: 'ُEmail',
+                    hintText: 'Email',
                     prifixIconImageName: 'email',
                     controller: _emailController,
-                    validator: (value){
-                      if(value == null || value.length<10){
-                        return 'Invalid email';
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return 'Email is required';
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(value)) {
+                        return 'Enter a valid email';
                       }
                       return null;
-                    },),
+                    },
+                  ),
                   SizedBox(height: 20.h),
                   DefaultTextFormField(
                     hintText: 'Password',
                     prifixIconImageName: 'password',
                     controller: _passwordController,
+                    isPassword: true,
                     validator: (v) => v!.length < 6 ? 'Min 6 characters' : null,
-                    isPassword: true,),
-                  SizedBox(height: 5.h),
+                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () => context.push(AppRoutes.forgetPassword),
                       child: Text(
                         'Forgot Password ?',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.primary),
+                        style: TextStyle(
+                            color: AppColors.primary, fontSize: 14.sp),
                       ),
                     ),
                   ),
@@ -101,6 +112,12 @@ class _LoginViewState extends State<_LoginView> {
                   BlocBuilder<LoginCubit, LoginState>(
                     builder: (context, state) {
                       return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.r)),
+                        ),
                         onPressed: state is LoginLoading
                             ? null
                             : () {
@@ -112,9 +129,16 @@ class _LoginViewState extends State<_LoginView> {
                                 }
                               },
                         child: state is LoginLoading
-                            ? const CircularProgressIndicator(
-                                color: AppColors.white)
-                            : const Text('Login'),
+                            ? SizedBox(
+                                height: 20.h,
+                                width: 20.h,
+                                child: const CircularProgressIndicator(
+                                    color: Colors.black),
+                              )
+                            : const Text('Login',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
                       );
                     },
                   ),
@@ -122,17 +146,17 @@ class _LoginViewState extends State<_LoginView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        ' Don’t Have Account ?',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.white),
-                      ),
+                      Text('Don’t Have Account ?',
+                          style: TextStyle(
+                              color: AppColors.white, fontSize: 14.sp)),
                       GestureDetector(
                         onTap: () => context.push(AppRoutes.register),
-                        child:  Text(
+                        child: Text(
                           ' Create One ',
-                          style: Theme.of(context).textTheme.bodyMedium!
-                              .copyWith(color: AppColors.primary,fontWeight: FontWeight.w900),
-
+                          style: TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.sp),
                         ),
                       ),
                     ],
@@ -140,73 +164,93 @@ class _LoginViewState extends State<_LoginView> {
                   SizedBox(height: 27.h),
                   Row(
                     children: [
-                      Expanded(child: Divider(color: AppColors.primary ,indent: 35,)),
+                      const Expanded(
+                          child: Divider(color: AppColors.primary, indent: 35)),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
                         child: Text('OR',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.primary),
-                      )
-                        ),
-                      Expanded(child: Divider(color: AppColors.primary ,endIndent: 35, )),
+                            style: TextStyle(
+                                color: AppColors.primary, fontSize: 14.sp)),
+                      ),
+                      const Expanded(
+                          child:
+                              Divider(color: AppColors.primary, endIndent: 35)),
                     ],
                   ),
                   SizedBox(height: 28.h),
                   ElevatedButton(
-                      onPressed: (){},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset('assets/icons/icongoogle.svg'),
-                          SizedBox(width: 16,),
-                          Text('Login With Google')
-                        ],
-                      ),),
+                    onPressed: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/icons/icongoogle.svg'),
+                        SizedBox(
+                          width: 16,
+                        ),
+                        Text('Login With Google')
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 20.h),
-              Center(
-                child: Container(
-                  width: 102,
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2, color: AppColors.primary),
-                    borderRadius: BorderRadius.circular(30),
+                  Center(
+                    child: Container(
+                      width: 102,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: AppColors.primary),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      //    padding: const EdgeInsets.all(6),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = 0;
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: selectedIndex == 0
+                                        ? AppColors.primary
+                                        : Colors.transparent,
+                                    width: 4,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: SvgPicture.asset(
+                                  'assets/icons/LR.svg',
+                                  width: 30,
+                                  height: 30,
+                                )),
+                          ),
+                          Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedIndex = 1;
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: selectedIndex == 1
+                                        ? AppColors.primary
+                                        : Colors.transparent,
+                                    width: 4,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: SvgPicture.asset(
+                                  'assets/icons/EG.svg',
+                                  width: 30,
+                                  height: 30,
+                                )),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-              //    padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                        setState(() {
-                          selectedIndex = 0;
-                        });
-                      },
-                        child: Container(
-                           decoration: BoxDecoration(
-                              border: Border.all(
-                                color: selectedIndex == 0 ? AppColors.primary : Colors.transparent,
-                                width: 4,
-                              ),
-                             borderRadius: BorderRadius.circular(20),),
-                            child: SvgPicture.asset('assets/icons/LR.svg',width: 30,height: 30,)),
-                     ),
-                      Spacer(),
-                      GestureDetector(
-                        onTap: (){
-                          setState(() {
-                            selectedIndex = 1;
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                            color: selectedIndex == 1 ? AppColors.primary : Colors.transparent,
-                            width: 4,),
-                            borderRadius: BorderRadius.circular(20),),
-                            child: SvgPicture.asset('assets/icons/EG.svg',width: 30,height: 30,)),
-                     ),
-
-                    ],
-                  ),
-
-                  ),),
                 ],
               ),
             ),

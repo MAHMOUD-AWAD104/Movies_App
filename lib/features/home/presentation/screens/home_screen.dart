@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     HomeTabScreen(),
     SearchTabScreen(),
     BrowseTabScreen(),
-    ProfileScreen(),
+    ProfileTabScreen(),
   ];
 
   @override

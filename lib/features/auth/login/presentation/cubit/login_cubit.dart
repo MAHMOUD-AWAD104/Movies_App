@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/user_entity.dart';
-import '../../domain/usecases/login_usecase.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -22,23 +22,53 @@ class LoginSuccess extends LoginState {
 
 class LoginFailure extends LoginState {
   final String message;
-  const LoginFailure({required this.message});
+  final String? code;
+  const LoginFailure({required this.message, this.code});
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, code];
 }
 
 class LoginCubit extends Cubit<LoginState> {
-  final LoginUseCase loginUseCase;
-
-  LoginCubit({required this.loginUseCase}) : super(LoginInitial());
+  LoginCubit() : super(LoginInitial());
 
   Future<void> login({required String email, required String password}) async {
     emit(LoginLoading());
-    final result =
-        await loginUseCase(LoginParams(email: email, password: password));
-    result.fold(
-      (failure) => emit(LoginFailure(message: failure.message)),
-      (user) => emit(LoginSuccess(user: user)),
-    );
+
+    try {
+      // Firebase Login
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (credential.user != null) {
+        final userEntity = UserEntity(
+          id: credential.user!.uid.hashCode,
+          email: credential.user!.email ?? email,
+          username: credential.user!.displayName ?? 'movieLover',
+          apiKey: 'your_api_key_here',
+        );
+        emit(LoginSuccess(user: userEntity));
+      } else {
+        emit(const LoginFailure(
+            message: "Failed to get user data from Firebase"));
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMsg = "An authentication error occurred.";
+      if (e.code == 'user-not-found') {
+        errorMsg = "No user found for that email.";
+      } else if (e.code == 'wrong-password') {
+        errorMsg = "Wrong password provided.";
+      } else if (e.code == 'invalid-email') {
+        errorMsg = "The email address is invalid.";
+      } else if (e.code == 'user-disabled') {
+        errorMsg = "This user has been disabled.";
+      }
+
+      emit(LoginFailure(message: errorMsg, code: e.code));
+    } catch (e) {
+      emit(LoginFailure(
+          message: "An unexpected error occurred: ${e.toString()}"));
+    }
   }
 }

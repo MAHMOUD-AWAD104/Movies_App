@@ -4,6 +4,7 @@ import 'package:movies_app/features/auth/login/presentation/screens/login_screen
 import 'package:movies_app/features/auth/register/presentation/screens/register_screen.dart';
 import 'package:movies_app/features/home/movie_details/presentation/screens/movie_details_screen.dart';
 import 'package:movies_app/features/home/presentation/screens/home_screen.dart';
+import 'package:movies_app/features/home/tabs/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:movies_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:movies_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,6 +44,10 @@ class AppRouter {
           return MovieDetailsScreen(movieId: movieId);
         },
       ),
+      GoRoute(
+        path: AppRoutes.EditProfile,
+        builder: (context, state) => const EditProfileScreen(),
+      ),
     ],
   );
 }
@@ -55,4 +60,5 @@ class AppRoutes {
   static const String forgetPassword = '/forget-password';
   static const String home = '/home';
   static const String movieDetails = '/movie-details';
+  static const String EditProfile = '/edit-profile';
 }
