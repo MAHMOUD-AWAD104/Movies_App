@@ -29,10 +29,15 @@ class MovieDetailsScreen extends StatelessWidget {
   }
 }
 
-class _MovieDetailsView extends StatelessWidget {
+class _MovieDetailsView extends StatefulWidget {
 
   const _MovieDetailsView();
 
+  @override
+  State<_MovieDetailsView> createState() => _MovieDetailsViewState();
+}
+
+class _MovieDetailsViewState extends State<_MovieDetailsView> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
@@ -165,6 +170,7 @@ class _MovieDetailsView extends StatelessWidget {
                           .textTheme
                           .titleLarge,),
                       SizedBox(height: 8.h),
+                      if (movie.screenShot1.isNotEmpty)
                       SizedBox(
                         height: 170,
                         child: ClipRRect(
@@ -172,8 +178,10 @@ class _MovieDetailsView extends StatelessWidget {
                           child: CachedNetworkImage(imageUrl: movie.screenShot1,
                             fit: BoxFit.cover,),
                         ),
-                      ), SizedBox(height: 8.h),
-                      SizedBox(
+                      ),
+                      SizedBox(height: 8.h),
+                      if (movie.screenShot2.isNotEmpty)
+                        SizedBox(
                         height: 170,
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(16.r)),
@@ -181,7 +189,8 @@ class _MovieDetailsView extends StatelessWidget {
                             fit: BoxFit.cover,),
                         ),
                       ), SizedBox(height: 8.h),
-                      SizedBox(
+                      if (movie.screenShot3.isNotEmpty)
+                        SizedBox(
                         height: 170,
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(16.r)),
@@ -277,13 +286,19 @@ class _MovieDetailsView extends StatelessWidget {
   }
 }
 
-class _MovieAppBar extends StatelessWidget {
+class _MovieAppBar extends StatefulWidget {
   final MovieEntity movie;
 
   const _MovieAppBar({required this.movie});
 
   @override
+  State<_MovieAppBar> createState() => _MovieAppBarState();
+}
+
+class _MovieAppBarState extends State<_MovieAppBar> {
+  @override
   Widget build(BuildContext context) {
+    bool isSaved =false;
     return SliverAppBar(
       actionsPadding: const EdgeInsets.only(right: 20),
       leadingWidth: 25,
@@ -300,8 +315,13 @@ class _MovieAppBar extends StatelessWidget {
             Navigator.of(context).pop();
       }),
       actions: [GestureDetector(
-          child: SvgPicture.asset('assets/icons/watchlater.svg',),
+          child: SvgPicture.asset('assets/icons/watchlater.svg',
+            colorFilter: ColorFilter.mode(isSaved
+                ? AppColors.primary: AppColors.white, BlendMode.srcIn),),
         onTap: (){
+            setState(() {
+              isSaved = !isSaved;
+            });
 
         },)],
       flexibleSpace: FlexibleSpaceBar(
@@ -309,10 +329,10 @@ class _MovieAppBar extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             CachedNetworkImage(
-              imageUrl:movie.largeCoverImage.isNotEmpty
-                  ? movie.largeCoverImage
-                  : movie.backgroundImage,
-              fit: BoxFit.fill,
+              imageUrl:widget.movie.largeCoverImage.isNotEmpty
+                  ? widget.movie.largeCoverImage
+                  : widget.movie.backgroundImage,
+              fit: BoxFit.cover,
                 errorWidget: (_, __, ___) => Image.network(ApiConstants.urlBImage)),
             Container(
               decoration: BoxDecoration(

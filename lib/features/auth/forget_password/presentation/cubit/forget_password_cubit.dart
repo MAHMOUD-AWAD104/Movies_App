@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/features/auth/forget_password/domain/usecases/forget_password_usecase.dart';
 
@@ -34,10 +35,23 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
 
   Future<void> forgetPassword(String email) async {
     emit(ForgetPasswordLoading());
-    final result = await forgetPasswordUseCase(email);
-    result.fold(
-      (failure) => emit(ForgetPasswordFailure(message: failure.message)),
-      (message) => emit(ForgetPasswordSuccess(message: message)),
-    );
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      emit(const ForgetPasswordSuccess(
+          message: "A password reset link has been sent to your email."));
+    } on FirebaseAuthException catch (e) {
+      String errorMsg = "An error occurred, please try again.";
+      if (e.code == 'user-not-found') {
+        errorMsg = "No user found with this email.";
+      } else if (e.code == 'invalid-email') {
+        errorMsg = "The email address is not valid.";
+      }
+
+      emit(ForgetPasswordFailure(message: errorMsg));
+    } catch (e) {
+      emit(ForgetPasswordFailure(message: e.toString()));
+    }
   }
 }

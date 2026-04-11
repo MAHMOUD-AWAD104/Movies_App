@@ -32,13 +32,9 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Padding(
-              padding: EdgeInsets.all(20.r),
-              child: Text('Search',
-                  style: Theme.of(context).textTheme.headlineMedium),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 15),
               child: TextField(
                 controller: _searchCtrl,
                 onChanged: (query) =>
@@ -46,10 +42,14 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                 style: const TextStyle(color: AppColors.white),
                 decoration: InputDecoration(
                   hintText: 'Search movies...',
-                  prefixIcon: SvgPicture.asset(
-                    'assets/icons/search.svg',
-                    width: 10,
-                    height: 5,
+                  prefixIcon: Padding(
+                    padding:  EdgeInsets.all(12.0),
+                    child: SvgPicture.asset('assets/icons/search.svg',
+                      colorFilter: const ColorFilter.mode(AppColors.white, BlendMode.srcIn,
+                      ),
+                      width: 26,
+                      height: 26,
+                    ),
                   ),
                   suffixIcon: _searchCtrl.text.isNotEmpty
                       ? IconButton(
@@ -62,6 +62,7 @@ class _SearchTabScreenState extends State<SearchTabScreen> {
                       : null,
                 ),
               ),
+
             ),
             SizedBox(height: 16.h),
             Expanded(
