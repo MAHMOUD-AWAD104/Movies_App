@@ -42,7 +42,7 @@ Future<void> init() async {
 
 void _initAuth() {
   // Login
-  sl.registerFactory(() => LoginCubit(loginUseCase: sl()));
+  sl.registerFactory(() => LoginCubit());
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton<LoginRepo>(
       () => LoginRepoImpl(apiClient: sl(), networkInfo: sl()));
@@ -76,21 +76,21 @@ void _initHome() {
 
   // Movie Details
   sl.registerFactory(
-        () => MovieDetailsCubit(
+    () => MovieDetailsCubit(
       getMovieDetailsUseCase: sl(),
       getMovieSuggestionsUseCase: sl(),
     ),
   );
 
   sl.registerLazySingleton<GetMovieDetailsUseCase>(
-        () => GetMovieDetailsUseCase(sl()),
+    () => GetMovieDetailsUseCase(sl()),
   );
 
   sl.registerLazySingleton<GetMovieSuggestionsUseCase>(
-        () => GetMovieSuggestionsUseCase(sl()),
+    () => GetMovieSuggestionsUseCase(sl()),
   );
 
   sl.registerLazySingleton<MovieDetailsRepo>(
-        () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()),
+    () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()),
   );
 }

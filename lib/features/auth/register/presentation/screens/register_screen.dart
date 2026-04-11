@@ -39,7 +39,7 @@ class _RegisterViewState extends State<_RegisterView> {
   final _confirmPasswordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  int selectedIndex =0;
+  int selectedIndex = 0;
   final List<String> avatarPaths = [
     'assets/images/avatar1.png',
     'assets/images/avatar2.png',
@@ -51,7 +51,6 @@ class _RegisterViewState extends State<_RegisterView> {
     'assets/images/avatar8.png',
     'assets/images/avatar9.png',
   ];
-
 
   @override
   void dispose() {
@@ -66,7 +65,7 @@ class _RegisterViewState extends State<_RegisterView> {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          context.go(AppRoutes.home);
+          context.go(AppRoutes.login);
         } else if (state is RegisterFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -87,59 +86,76 @@ class _RegisterViewState extends State<_RegisterView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CarouselSlider.builder(itemCount: avatarPaths.length,
-                    itemBuilder: (_, index, ind ) => Imagecarousel(avatarPath: avatarPaths[index]),
-                    options:  CarouselOptions(height: 115,
+                CarouselSlider.builder(
+                  itemCount: avatarPaths.length,
+                  itemBuilder: (_, index, ind) =>
+                      Imagecarousel(avatarPath: avatarPaths[index]),
+                  options: CarouselOptions(
+                      height: 115,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.38,
-                      viewportFraction: 0.38
-                    ),
+                      viewportFraction: 0.38),
                 ),
-                SizedBox(height: 10,),
-                Text('Avatar',style: Theme.of(context).textTheme.bodyLarge,),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'Avatar',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 DefaultTextFormField(
                   hintText: 'Name',
                   prifixIconImageName: 'name',
                   controller: _usernameCtrl,
-                  validator: (value){
-                    if(value == null ){
+                  validator: (value) {
+                    if (value == null) {
                       return 'Enter your Name';
                     }
                     return null;
-                  },),
+                  },
+                ),
                 SizedBox(height: 16.h),
                 DefaultTextFormField(
                   hintText: 'ُEmail',
                   prifixIconImageName: 'email',
                   controller: _emailCtrl,
-                  validator: (value){
-                    if(value == null || value.length<10){
+                  validator: (value) {
+                    if (value == null || value.length < 10) {
                       return 'Invalid email';
                     }
                     return null;
-                  },),
+                  },
+                ),
                 SizedBox(height: 16.h),
                 DefaultTextFormField(
                   hintText: 'Password',
                   prifixIconImageName: 'password',
                   controller: _passwordCtrl,
                   validator: (v) => v!.length < 6 ? 'Min 6 characters' : null,
-                isPassword: true,),
+                  isPassword: true,
+                ),
                 SizedBox(height: 16.h),
                 DefaultTextFormField(
                   hintText: 'Password',
                   prifixIconImageName: 'password',
                   controller: _confirmPasswordCtrl,
-                  validator: (v) => v!=_passwordCtrl.text? 'invalid Password' : null,
-                isPassword: true,),
-                SizedBox(height: 16.h,),
+                  validator: (v) =>
+                      v != _passwordCtrl.text ? 'invalid Password' : null,
+                  isPassword: true,
+                ),
+                SizedBox(
+                  height: 16.h,
+                ),
                 DefaultTextFormField(
                   hintText: 'Phone',
                   prifixIconImageName: 'phone',
                   controller: _phoneCtrl,
-                  validator: (v) => v!.length < 6 ? 'invalid phone number' : null,),
-
+                  validator: (v) =>
+                      v!.length < 6 ? 'invalid phone number' : null,
+                ),
                 SizedBox(height: 30.h),
                 BlocBuilder<RegisterCubit, RegisterState>(
                   builder: (context, state) {
@@ -169,14 +185,18 @@ class _RegisterViewState extends State<_RegisterView> {
                   children: [
                     Text(
                       ' Already Have Account?',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.white),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: AppColors.white),
                     ),
                     GestureDetector(
                       onTap: () => context.pop(),
-                      child:  Text(
+                      child: Text(
                         ' Login ',
-                        style:Theme.of(context).textTheme.bodyMedium!
-                            .copyWith(color: AppColors.primary,fontWeight: FontWeight.w900),
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w900),
                       ),
                     ),
                   ],
@@ -193,7 +213,7 @@ class _RegisterViewState extends State<_RegisterView> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               selectedIndex = 0;
                             });
@@ -201,15 +221,22 @@ class _RegisterViewState extends State<_RegisterView> {
                           child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: selectedIndex == 0 ? AppColors.primary : Colors.transparent,
+                                  color: selectedIndex == 0
+                                      ? AppColors.primary
+                                      : Colors.transparent,
                                   width: 4,
                                 ),
-                                borderRadius: BorderRadius.circular(20),),
-                              child: SvgPicture.asset('assets/icons/LR.svg',width: 30,height: 30,)),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: SvgPicture.asset(
+                                'assets/icons/LR.svg',
+                                width: 30,
+                                height: 30,
+                              )),
                         ),
                         Spacer(),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               selectedIndex = 1;
                             });
@@ -217,19 +244,23 @@ class _RegisterViewState extends State<_RegisterView> {
                           child: Container(
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: selectedIndex == 1 ? AppColors.primary : Colors.transparent,
-                                  width: 4,),
-                                borderRadius: BorderRadius.circular(20),),
-                              child: SvgPicture.asset('assets/icons/EG.svg',width: 30,height: 30,)),
+                                  color: selectedIndex == 1
+                                      ? AppColors.primary
+                                      : Colors.transparent,
+                                  width: 4,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: SvgPicture.asset(
+                                'assets/icons/EG.svg',
+                                width: 30,
+                                height: 30,
+                              )),
                         ),
-
                       ],
                     ),
-
-                  ),),
-
-
-
+                  ),
+                ),
               ],
             ),
           ),
@@ -238,5 +269,3 @@ class _RegisterViewState extends State<_RegisterView> {
     );
   }
 }
-
-

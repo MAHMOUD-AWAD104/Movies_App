@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/features/auth/login/domain/entities/user_entity.dart';
 import 'package:movies_app/features/auth/register/domain/usecases/register_usecase.dart';
@@ -37,14 +39,51 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String email,
     required String password,
     required String phone,
+    String? avatarPath,
   }) async {
     emit(RegisterLoading());
-    final result = await registerUseCase(
-      RegisterParams(username: username, email: email, password: password,phone: phone),
-    );
-    result.fold(
-      (failure) => emit(RegisterFailure(message: failure.message)),
-      (user) => emit(RegisterSuccess(user: user)),
-    );
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (credential.user != null) {
+        await credential.user!.updateDisplayName(username);
+        await credential.user!.reload();
+
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(credential.user!.uid)
+            .set({
+          'uId': credential.user!.uid,
+          'username': username,
+          'email': email,
+          'phone': phone,
+          'avatar': avatarPath ?? '',
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        final userEntity = UserEntity(
+          id: credential.user!.uid.hashCode,
+          email: email,
+          username: username,
+          apiKey: '',
+        );
+
+        emit(RegisterSuccess(user: userEntity));
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMsg = "حدث خطأ أثناء التسجيل";
+      if (e.code == 'email-already-in-white') {
+        errorMsg = "هذا البريد الإلكتروني مسجل بالفعل";
+      } else if (e.code == 'weak-password') {
+        errorMsg = "كلمة المرور ضعيفة جداً";
+      }
+      emit(RegisterFailure(message: errorMsg));
+    } catch (e) {
+      emit(RegisterFailure(message: e.toString()));
+    }
   }
 }
