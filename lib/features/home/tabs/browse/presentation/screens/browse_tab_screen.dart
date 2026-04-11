@@ -9,14 +9,18 @@ import '../../../../tabs/home/presentation/cubit/home_state.dart';
 import '../../../home/presentation/screens/widgets/movie_card.dart';
 
 class BrowseTabScreen extends StatefulWidget {
-  const BrowseTabScreen({super.key});
+  final String genre;
+
+  const BrowseTabScreen({super.key,required this.genre});
 
   @override
   State<BrowseTabScreen> createState() => _BrowseTabScreenState();
 }
 
 class _BrowseTabScreenState extends State<BrowseTabScreen> {
-  String? _selectedGenre;
+  String? _selectedGenre ;
+  final ScrollController _genreScrollController = ScrollController();
+
 
   static const _genres = [
     'Action',
@@ -41,6 +45,38 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
     'Western',
   ];
 
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGenre = widget.genre;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToSelectedGenre();
+      context.read<HomeCubit>().getMovies(genre: widget.genre);
+    });
+  }
+
+  void _scrollToSelectedGenre() {
+    final index = _genres.indexOf(_selectedGenre ?? '');
+    if (index == -1 || !_genreScrollController.hasClients) return;
+
+    const itemWidth =  100.0;
+    final offset = index * itemWidth;
+
+    _genreScrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _genreScrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,50 +85,65 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 40.h,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: _genres.length,
-                itemBuilder: (context, index) {
-                  final genre = _genres[index];
-                  // final color = _colors[index % _colors.length];
-                  final color = AppColors.primary;
-                  final isSelected = _selectedGenre == genre;
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: SizedBox(
+                    height: 40.h,
+                    child: ListView.builder(
+                      controller: _genreScrollController,
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.only(right: 16.w),
+                      itemCount: _genres.length,
+                      itemBuilder: (context, index) {
+                        final genre = _genres[index];
+                        final color = AppColors.primary;
+                        final isSelected = _selectedGenre == genre;
 
-                  return Padding(
-                    padding: EdgeInsets.only(right: 8.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() => _selectedGenre = genre);
-                        context.read<HomeCubit>().getMovies(genre: genre);
+                        return Padding(
+                          padding: EdgeInsets.only(right: 8.w),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() => _selectedGenre = genre);
+                              _scrollToSelectedGenre();
+                              context.read<HomeCubit>().getMovies(genre: genre);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected ? color : AppColors.background,
+                                borderRadius: BorderRadius.circular(16.r),
+                                border: Border.all(color: color),
+                              ),
+                              child: Text(
+                                genre,
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? AppColors.background
+                                      : AppColors.primary,
+                                  fontSize: 20.sp,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
                       },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 8.h),
-                        decoration: BoxDecoration(
-                          color: isSelected ? color : AppColors.background,
-                          borderRadius: BorderRadius.circular(16.r),
-                          border: Border.all(
-                            color: color,
-                          ),
-                        ),
-                        child: Text(
-                          genre,
-                          style: TextStyle(
-                            color: isSelected
-                                ? AppColors.background
-                                : AppColors.primary,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                ),
+              ],
             ),
 
             SizedBox(height: 25.h),

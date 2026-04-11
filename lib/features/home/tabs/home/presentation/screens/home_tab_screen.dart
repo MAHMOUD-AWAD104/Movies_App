@@ -258,10 +258,11 @@ class _GenreSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => context.read<HomeCubit>(),
-      child: _GenreSectionContent(genre: genre),
-    );
+    //return BlocProvider(
+     // create: (_) => context.read<HomeCubit>(),
+      //child: _GenreSectionContent(genre: genre),
+    //);
+    return _GenreSectionContent(genre: genre);
   }
 }
 
@@ -322,8 +323,9 @@ class _GenreSectionContentState extends State<_GenreSectionContent> {
                 ),
               ),
               GestureDetector(
-                onTap: () =>
-                    context.read<HomeCubit>().getMovies(genre: widget.genre),
+                onTap: () => context.push(
+                  '${AppRoutes.browse}/${widget.genre}',
+                ),
                 child: Text(
                   'See More →',
                   style: TextStyle(
