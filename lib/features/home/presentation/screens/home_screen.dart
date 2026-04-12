@@ -19,16 +19,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  String? selectedBrowseGenre;
 
-  final _tabs = const [
-    HomeTabScreen(),
-    SearchTabScreen(),
-    BrowseTabScreen(genre: 'Action'),
-    ProfileTabScreen(),
-  ];
+  void openBrowseTab(String genre) {
+    setState(() {
+      _selectedIndex = 2;
+      selectedBrowseGenre = genre;
+    });
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
+    final tabs = [
+      HomeTabScreen(onSeeMoreTapped: openBrowseTab),
+      const SearchTabScreen(),
+      BrowseTabScreen(
+        key: ValueKey(selectedBrowseGenre),
+        genre: selectedBrowseGenre ?? 'Action',
+      ),
+      const ProfileTabScreen(),
+    ];
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<HomeCubit>()..getMovies()),
@@ -38,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         extendBody: true,
         body: IndexedStack(
           index: _selectedIndex,
-          children: _tabs,
+          children: tabs,
         ),
         bottomNavigationBar: SafeArea(
           minimum: const EdgeInsets.only(right: 9, left: 9, bottom: 15),

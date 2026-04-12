@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:movies_app/core/constants/api_constants.dart';
 import 'package:movies_app/core/constants/app_colors.dart';
 import 'package:movies_app/core/di/injection_container.dart';
@@ -296,24 +297,24 @@ class _MovieAppBar extends StatefulWidget {
 }
 
 class _MovieAppBarState extends State<_MovieAppBar> {
+  bool isSaved =false;
+
   @override
   Widget build(BuildContext context) {
-    bool isSaved =false;
     return SliverAppBar(
       actionsPadding: const EdgeInsets.only(right: 20),
       leadingWidth: 25,
       expandedHeight: 500.h,
       pinned: false,
       backgroundColor: AppColors.background,
-      leading: GestureDetector(
-          child: Container(
-            width: 20,
-            padding: const EdgeInsets.only(left: 10.0),
-            child: SvgPicture.asset('assets/icons/barrow.svg',),
-          ),
-      onTap: () {
-            Navigator.of(context).pop();
-      }),
+      leading: IconButton(
+        onPressed: () => context.pop(),
+        icon: const Icon(
+          Icons.arrow_back_ios_new,
+          color: AppColors.white,
+        ),
+      ),
+
       actions: [GestureDetector(
           child: SvgPicture.asset('assets/icons/watchlater.svg',
             colorFilter: ColorFilter.mode(isSaved
