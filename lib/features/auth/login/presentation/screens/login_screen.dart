@@ -179,7 +179,9 @@ class _LoginViewState extends State<_LoginView> {
                   ),
                   SizedBox(height: 28.h),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<LoginCubit>().signInWithGoogle();
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

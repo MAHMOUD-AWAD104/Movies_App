@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/user_entity.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class LoginState extends Equatable {
   const LoginState();
@@ -69,6 +70,45 @@ class LoginCubit extends Cubit<LoginState> {
     } catch (e) {
       emit(LoginFailure(
           message: "An unexpected error occurred: ${e.toString()}"));
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    emit(LoginLoading());
+
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        emit(const LoginFailure(message: 'Google sign in cancelled'));
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final user = userCredential.user!;
+
+      emit(
+        LoginSuccess(
+          user: UserEntity(
+            id: user.uid.hashCode,
+            email: user.email ?? '',
+            username: user.displayName ?? 'movieLover',
+            apiKey: 'google_auth_user',
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(LoginFailure(message: e.toString()));
     }
   }
 }

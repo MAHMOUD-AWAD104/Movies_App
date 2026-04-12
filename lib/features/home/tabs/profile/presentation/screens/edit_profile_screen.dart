@@ -54,10 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => isLoading = true);
 
     try {
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(user!.uid)
-          .update({
+      FirebaseFirestore.instance.collection('Users').doc(user!.uid).update({
         'username': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'avatar': selectedAvatar,
@@ -153,50 +150,50 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: TextStyle(color: Color(0xFFFFBB3B))),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: _showAvatarPicker,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundImage: AssetImage(selectedAvatar),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: _showAvatarPicker,
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundImage: AssetImage(selectedAvatar),
+                ),
               ),
-            ),
-            const SizedBox(height: 40),
-            _buildTextField(Icons.person, "Name", nameController),
-            const SizedBox(height: 15),
-            _buildTextField(Icons.phone, "Phone", phoneController),
-            const SizedBox(height: 15),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: () async {
-                  if (user?.email != null) {
-                    await FirebaseAuth.instance
-                        .sendPasswordResetEmail(email: user!.email!);
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Reset link sent to your email")));
-                  }
-                },
-                child: const Text("Reset Password",
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
+              const SizedBox(height: 40),
+              _buildTextField(Icons.person, "Name", nameController),
+              const SizedBox(height: 15),
+              _buildTextField(Icons.phone, "Phone", phoneController),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () async {
+                    if (user?.email != null) {
+                      await FirebaseAuth.instance
+                          .sendPasswordResetEmail(email: user!.email!);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Reset link sent to your email")));
+                    }
+                  },
+                  child: const Text("Reset Password",
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
               ),
-            ),
-            const Spacer(),
-            _buildActionButton(
-                "Delete Account", const Color(0xFFE82626), Colors.white,
-                () async {
-            }),
-            const SizedBox(height: 12),
-            isLoading
-                ? const CircularProgressIndicator(color: Color(0xFFFFBB3B))
-                : _buildActionButton("Update Data", const Color(0xFFFFBB3B),
-                    Colors.black, _updateProfile),
-            const SizedBox(height: 30),
-          ],
+              // const Spacer(),
+              _buildActionButton("Delete Account", const Color(0xFFE82626),
+                  Colors.white, () async {}),
+              const SizedBox(height: 12),
+              isLoading
+                  ? const CircularProgressIndicator(color: Color(0xFFFFBB3B))
+                  : _buildActionButton("Update Data", const Color(0xFFFFBB3B),
+                      Colors.black, _updateProfile),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
