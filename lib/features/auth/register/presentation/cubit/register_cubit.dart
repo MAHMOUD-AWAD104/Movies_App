@@ -42,48 +42,55 @@ class RegisterCubit extends Cubit<RegisterState> {
     String? avatarPath,
   }) async {
     emit(RegisterLoading());
+
     try {
       final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      if (credential.user != null) {
-        await credential.user!.updateDisplayName(username);
-        await credential.user!.reload();
+      final user = credential.user;
 
-        await FirebaseFirestore.instance
-            .collection('Users')
-            .doc(credential.user!.uid)
-            .set({
-          'uId': credential.user!.uid,
-          'username': username,
-          'email': email,
-          'phone': phone,
-          'avatar': avatarPath ?? '',
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-
-        final userEntity = UserEntity(
-          id: credential.user!.uid.hashCode,
-          email: email,
-          username: username,
-          apiKey: '',
-        );
-
-        emit(RegisterSuccess(user: userEntity));
+      if (user == null) {
+        emit(const RegisterFailure(message: 'فشل إنشاء المستخدم'));
+        return;
       }
+
+      final userEntity = UserEntity(
+        id: user.uid.hashCode,
+        email: email,
+        username: username,
+        apiKey: '',
+      );
+
+      emit(RegisterSuccess(user: userEntity));
+
+      await user.updateDisplayName(username);
+
+      await FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
+        'uId': user.uid,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'avatar': avatarPath ?? '',
+        'createdAt': FieldValue.serverTimestamp(),
+      });
     } on FirebaseAuthException catch (e) {
-      String errorMsg = "حدث خطأ أثناء التسجيل";
-      if (e.code == 'email-already-in-white') {
-        errorMsg = "هذا البريد الإلكتروني مسجل بالفعل";
+      String errorMsg = 'حدث خطأ أثناء التسجيل';
+
+      if (e.code == 'email-already-in-use') {
+        errorMsg = 'هذا البريد الإلكتروني مسجل بالفعل';
       } else if (e.code == 'weak-password') {
-        errorMsg = "كلمة المرور ضعيفة جداً";
+        errorMsg = 'كلمة المرور ضعيفة جداً';
+      } else if (e.code == 'invalid-email') {
+        errorMsg = 'البريد الإلكتروني غير صحيح';
       }
+
       emit(RegisterFailure(message: errorMsg));
     } catch (e) {
       emit(RegisterFailure(message: e.toString()));
     }
   }
+
 }

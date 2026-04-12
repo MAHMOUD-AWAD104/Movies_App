@@ -11,7 +11,14 @@ import 'widgets/movie_card.dart';
 import 'widgets/movie_shimmer.dart';
 
 class HomeTabScreen extends StatefulWidget {
-  const HomeTabScreen({super.key});
+  final Function(String genre) onSeeMoreTapped;
+
+  const HomeTabScreen({
+    super.key,
+    required this.onSeeMoreTapped,
+  });
+
+
 
   @override
   State<HomeTabScreen> createState() => _HomeTabScreenState();
@@ -28,6 +35,8 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     'Animation',
     'Thriller',
   ];
+
+
 
   @override
   void initState() {
@@ -85,7 +94,10 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
 
                 // Genres sections
                 ...(_genres.map((genre) => SliverToBoxAdapter(
-                      child: _GenreSection(genre: genre),
+                  child: _GenreSection(
+                    genre: genre,
+                    onSeeMoreTapped: widget.onSeeMoreTapped,
+                  ),
                     ))),
               ],
             );
@@ -254,21 +266,30 @@ class _FeaturedSectionState extends State<_FeaturedSection> {
 
 class _GenreSection extends StatelessWidget {
   final String genre;
-  const _GenreSection({required this.genre});
+  final Function(String genre) onSeeMoreTapped;
+
+  const _GenreSection({
+    required this.genre,
+    required this.onSeeMoreTapped,
+  });
 
   @override
   Widget build(BuildContext context) {
-    //return BlocProvider(
-     // create: (_) => context.read<HomeCubit>(),
-      //child: _GenreSectionContent(genre: genre),
-    //);
-    return _GenreSectionContent(genre: genre);
+    return _GenreSectionContent(
+      genre: genre,
+      onSeeMoreTapped: onSeeMoreTapped,
+    );
   }
 }
 
 class _GenreSectionContent extends StatefulWidget {
   final String genre;
-  const _GenreSectionContent({required this.genre});
+  final Function(String genre) onSeeMoreTapped;
+
+  const _GenreSectionContent({
+    required this.genre,
+    required this.onSeeMoreTapped,
+  });
 
   @override
   State<_GenreSectionContent> createState() => _GenreSectionContentState();
@@ -278,11 +299,14 @@ class _GenreSectionContentState extends State<_GenreSectionContent> {
   List _movies = [];
   bool _loaded = false;
 
+
+
   @override
   void initState() {
     super.initState();
     _loadMovies();
   }
+
 
   Future<void> _loadMovies() async {
     final cubit = context.read<HomeCubit>();
@@ -323,9 +347,7 @@ class _GenreSectionContentState extends State<_GenreSectionContent> {
                 ),
               ),
               GestureDetector(
-                onTap: () => context.push(
-                  '${AppRoutes.browse}/${widget.genre}',
-                ),
+                onTap: () => widget.onSeeMoreTapped(widget.genre),
                 child: Text(
                   'See More →',
                   style: TextStyle(

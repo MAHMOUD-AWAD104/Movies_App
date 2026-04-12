@@ -85,66 +85,54 @@ class _BrowseTabScreenState extends State<BrowseTabScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: AppColors.primary,
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: SizedBox(
-                    height: 40.h,
-                    child: ListView.builder(
-                      controller: _genreScrollController,
-                      scrollDirection: Axis.horizontal,
-                      padding: EdgeInsets.only(right: 16.w),
-                      itemCount: _genres.length,
-                      itemBuilder: (context, index) {
-                        final genre = _genres[index];
-                        final color = AppColors.primary;
-                        final isSelected = _selectedGenre == genre;
 
-                        return Padding(
-                          padding: EdgeInsets.only(right: 8.w),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() => _selectedGenre = genre);
-                              _scrollToSelectedGenre();
-                              context.read<HomeCubit>().getMovies(genre: genre);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected ? color : AppColors.background,
-                                borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: color),
-                              ),
-                              child: Text(
-                                genre,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? AppColors.background
-                                      : AppColors.primary,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w700,
-                                ),
+
+                SizedBox(
+                  height: 40.h,
+                  child: ListView.builder(
+                    controller: _genreScrollController,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.only(right: 16.w),
+                    itemCount: _genres.length,
+                    itemBuilder: (context, index) {
+                      final genre = _genres[index];
+                      final color = AppColors.primary;
+                      final isSelected = _selectedGenre == genre;
+
+                      return Padding(
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() => _selectedGenre = genre);
+                            _scrollToSelectedGenre();
+                            context.read<HomeCubit>().getMovies(genre: genre);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected ? color : AppColors.background,
+                              borderRadius: BorderRadius.circular(16.r),
+                              border: Border.all(color: color),
+                            ),
+                            child: Text(
+                              genre,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? AppColors.background
+                                    : AppColors.primary,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ],
-            ),
 
             SizedBox(height: 25.h),
 

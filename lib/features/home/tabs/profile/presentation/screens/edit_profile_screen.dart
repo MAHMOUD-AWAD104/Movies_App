@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -50,32 +51,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   //Firestore
   Future<void> _updateProfile() async {
-    final navigator = Navigator.of(context);
     setState(() => isLoading = true);
+
     try {
-      await FirebaseFirestore.instance
+      FirebaseFirestore.instance
           .collection('Users')
-          .doc(user?.uid)
+          .doc(user!.uid)
           .update({
         'username': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'avatar': selectedAvatar,
       });
-      await user?.updateDisplayName(nameController.text.trim());
-      if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Profile Updated!")));
-        navigator.pop(context);
-      }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Profile Updated!")),
+      );
+
+      context.pop(); // 👈 يرجع فورًا
     } catch (e) {
-      print("Error: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+      setState(() => isLoading = false);
     }
   }
 
@@ -184,7 +189,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             _buildActionButton(
                 "Delete Account", const Color(0xFFE82626), Colors.white,
                 () async {
-              // منطق حذف الحساب (اختياري)
             }),
             const SizedBox(height: 12),
             isLoading

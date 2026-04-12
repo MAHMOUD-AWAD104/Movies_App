@@ -40,6 +40,7 @@ class _RegisterViewState extends State<_RegisterView> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   int selectedIndex = 0;
+  late String selectedAvatar;
   final List<String> avatarPaths = [
     'assets/images/avatar1.png',
     'assets/images/avatar2.png',
@@ -65,7 +66,7 @@ class _RegisterViewState extends State<_RegisterView> {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
-          context.go(AppRoutes.login);
+          context.go(AppRoutes.home);
         } else if (state is RegisterFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -94,16 +95,23 @@ class _RegisterViewState extends State<_RegisterView> {
                       height: 115,
                       enlargeCenterPage: true,
                       enlargeFactor: 0.38,
-                      viewportFraction: 0.38),
+                      viewportFraction: 0.38,
+                  initialPage: 1,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        selectedAvatar = avatarPaths[index];
+                      });
+                    },
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Text(
                   'Avatar',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 DefaultTextFormField(
@@ -169,6 +177,7 @@ class _RegisterViewState extends State<_RegisterView> {
                                       email: _emailCtrl.text.trim(),
                                       password: _passwordCtrl.text,
                                       phone: _phoneCtrl.text,
+                                  avatarPath: selectedAvatar,
                                     );
                               }
                             },
