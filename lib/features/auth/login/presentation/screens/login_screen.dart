@@ -186,10 +186,10 @@ class _LoginViewState extends State<_LoginView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SvgPicture.asset('assets/icons/icongoogle.svg'),
-                        SizedBox(
+                        const SizedBox(
                           width: 16,
                         ),
-                        Text('Login With Google')
+                        const Text('Login With Google')
                       ],
                     ),
                   ),

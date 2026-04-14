@@ -8,5 +8,6 @@ abstract class RegisterRepo {
     required String email,
     required String password,
     required String phone,
+    String? avatarPath,
   });
 }
