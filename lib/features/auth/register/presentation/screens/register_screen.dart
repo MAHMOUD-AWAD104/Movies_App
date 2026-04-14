@@ -39,8 +39,6 @@ class _RegisterViewState extends State<_RegisterView> {
   final _confirmPasswordCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
-  int selectedIndex = 0;
-  late String selectedAvatar;
   final List<String> avatarPaths = [
     'assets/images/avatar1.png',
     'assets/images/avatar2.png',
@@ -52,12 +50,22 @@ class _RegisterViewState extends State<_RegisterView> {
     'assets/images/avatar8.png',
     'assets/images/avatar9.png',
   ];
+  int selectedIndex = 0;
+  late String selectedAvatar;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedAvatar = avatarPaths[1]; // لأن initialPage: 1
+  }
 
   @override
   void dispose() {
     _usernameCtrl.dispose();
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
+    _phoneCtrl.dispose();
+    _confirmPasswordCtrl.dispose();
     super.dispose();
   }
 
@@ -119,8 +127,8 @@ class _RegisterViewState extends State<_RegisterView> {
                   prifixIconImageName: 'name',
                   controller: _usernameCtrl,
                   validator: (value) {
-                    if (value == null) {
-                      return 'Enter your Name';
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Enter your name';
                     }
                     return null;
                   },
@@ -131,7 +139,7 @@ class _RegisterViewState extends State<_RegisterView> {
                   prifixIconImageName: 'email',
                   controller: _emailCtrl,
                   validator: (value) {
-                    if (value == null || value.length < 10) {
+                    if (value == null || value.trim().isEmpty || !value.contains('@')) {
                       return 'Invalid email';
                     }
                     return null;
@@ -161,8 +169,11 @@ class _RegisterViewState extends State<_RegisterView> {
                   hintText: 'Phone',
                   prifixIconImageName: 'phone',
                   controller: _phoneCtrl,
-                  validator: (v) =>
-                      v!.length < 6 ? 'invalid phone number' : null,
+                  validator: (v){
+                    if (v == null || v.trim().length < 6) {
+                      return 'Invalid phone number';
+                    }
+        }
                 ),
                 SizedBox(height: 30.h),
                 BlocBuilder<RegisterCubit, RegisterState>(
@@ -173,10 +184,10 @@ class _RegisterViewState extends State<_RegisterView> {
                           : () {
                               if (_formKey.currentState!.validate()) {
                                 context.read<RegisterCubit>().register(
-                                      username: _usernameCtrl.text.trim(),
-                                      email: _emailCtrl.text.trim(),
-                                      password: _passwordCtrl.text,
-                                      phone: _phoneCtrl.text,
+                                  username: _usernameCtrl.text.trim(),
+                                  email: _emailCtrl.text.trim(),
+                                  password: _passwordCtrl.text,
+                                  phone: _phoneCtrl.text,
                                   avatarPath: selectedAvatar,
                                     );
                               }

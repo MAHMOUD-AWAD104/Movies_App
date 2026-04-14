@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +15,7 @@ import 'package:movies_app/features/home/movie_details/presentation/widgets/genr
 import 'package:movies_app/features/home/tabs/home/domain/entities/movie_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../core/services/firebase_service.dart';
 import '../../../tabs/home/presentation/screens/widgets/movie_card.dart';
 
 
@@ -39,6 +42,48 @@ class _MovieDetailsView extends StatefulWidget {
 }
 
 class _MovieDetailsViewState extends State<_MovieDetailsView> {
+
+  Map<String, dynamic> _buildMovieMap(MovieEntity movie) {
+    return {
+      'id': movie.id,
+      'title': movie.title,
+      'posterPath': movie.largeCoverImage,
+      'rating': movie.rating,
+      'year': movie.year,
+    };
+  }
+
+  static Future<void> watchMovie({
+    required Map<String, dynamic> movie,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(user.uid)
+        .get();
+
+    final data = doc.data() ?? {};
+
+    List<dynamic> history = List.from(data['history'] ?? []);
+    List<dynamic> watchlist = List.from(data['watchlist'] ?? []);
+
+    watchlist.removeWhere((item) => item['id'] == movie['id']);
+
+    history.removeWhere((item) => item['id'] == movie['id']);
+
+    history.insert(0, {
+      ...movie,
+      'watchedAt': DateTime.now().toIso8601String(),
+    });
+
+    await FirebaseFirestore.instance.collection('Users').doc(user.uid).set({
+      'history': history,
+      'watchlist': watchlist,
+    }, SetOptions(merge: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
@@ -80,16 +125,23 @@ class _MovieDetailsViewState extends State<_MovieDetailsView> {
                                 .bodyLarge),
                       ),
                       SizedBox(height: 8.h),
-                      ElevatedButton(onPressed: () {},
-                          style:
-                          ElevatedButton.styleFrom(backgroundColor: AppColors
-                              .red),
-                          child: Text('Watch', style: Theme
-                              .of(context)
-                              .textTheme
-                              .headlineMedium,)
-                      ),
-                      SizedBox(height: 8.h),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final movieMap = _buildMovieMap(movie);
+
+                          await FirebaseService.watchMovie(movie: movieMap);
+
+                          if (!mounted) return;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Added to history')),
+                          );
+                        },                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.red),
+                        child: Text(
+                          'Watch',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),                      SizedBox(height: 8.h),
 
                       Row(
                         spacing: 10,
@@ -300,6 +352,20 @@ class _MovieAppBarState extends State<_MovieAppBar> {
   bool isSaved =false;
 
   @override
+  void initState() {
+    super.initState();
+    _checkIfSaved();
+  }
+
+  Future<void> _checkIfSaved() async {
+    final exists = await FirebaseService.isMovieInWatchlist(widget.movie.id);
+    if (!mounted) return;
+    setState(() {
+      isSaved = exists;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       actionsPadding: const EdgeInsets.only(right: 20),
@@ -319,12 +385,31 @@ class _MovieAppBarState extends State<_MovieAppBar> {
           child: SvgPicture.asset('assets/icons/watchlater.svg',
             colorFilter: ColorFilter.mode(isSaved
                 ? AppColors.primary: AppColors.white, BlendMode.srcIn),),
-        onTap: (){
-            setState(() {
-              isSaved = !isSaved;
-            });
+        onTap: () {
+          final movieMap = {
+            'id': widget.movie.id,
+            'title': widget.movie.title,
+            'posterPath': widget.movie.largeCoverImage,
+            'rating': widget.movie.rating,
+            'year': widget.movie.year,
+          };
 
-        },)],
+          // 🔥 غيري اللون فورًا
+          final oldValue = isSaved;
+          setState(() {
+            isSaved = !isSaved;
+          });
+
+          // 🔄 شغلي Firebase في الخلفية
+          FirebaseService.toggleWatchlist(movie: movieMap).catchError((e) {
+            // لو حصل error رجعي الحالة
+            setState(() {
+              isSaved = oldValue;
+            });
+          });
+        },
+
+       )],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,

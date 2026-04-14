@@ -42,9 +42,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .get();
     if (ds.exists) {
       setState(() {
-        nameController.text = ds.get('username') ?? "";
-        phoneController.text = ds.get('phone') ?? "";
-        selectedAvatar = ds.get('avatar') ?? 'assets/images/avatar1.png';
+        nameController.text = ds.data()?['username'] ?? "";
+        phoneController.text = ds.data()?['phone'] ?? "";
+        selectedAvatar = ds.data()?['avatar'] ?? 'assets/images/avatar1.png';
       });
     }
   }
@@ -54,11 +54,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => isLoading = true);
 
     try {
-      FirebaseFirestore.instance.collection('Users').doc(user!.uid).update({
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user!.uid)
+          .set({
+        'uId': user!.uid,
         'username': nameController.text.trim(),
         'phone': phoneController.text.trim(),
         'avatar': selectedAvatar,
-      });
+      }, SetOptions(merge: true));
 
       if (!mounted) return;
 
@@ -66,7 +70,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SnackBar(content: Text("Profile Updated!")),
       );
 
-      context.pop(); // 👈 يرجع فورًا
+      context.pop();
     } catch (e) {
       if (!mounted) return;
 
@@ -80,7 +84,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() => isLoading = false);
     }
   }
-
   void _showAvatarPicker() {
     showModalBottomSheet(
       context: context,
@@ -144,7 +147,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFFFBB3B)),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () =>  context.pop(),
         ),
         title: const Text("Edit Profile",
             style: TextStyle(color: Color(0xFFFFBB3B))),

@@ -42,23 +42,25 @@ Future<void> init() async {
 
 void _initAuth() {
   // Login
-  sl.registerFactory(() => LoginCubit());
+  sl.registerFactory(() => LoginCubit(loginUseCase: sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton<LoginRepo>(
-      () => LoginRepoImpl(apiClient: sl(), networkInfo: sl()));
+        () => LoginRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 
   // Register
   sl.registerFactory(() => RegisterCubit(registerUseCase: sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
-  sl.registerLazySingleton<RegisterRepo>(() =>
-      RegisterRepoImpl(apiClient: sl(), networkInfo: sl()) as RegisterRepo);
+  sl.registerLazySingleton<RegisterRepo>(
+        () => RegisterRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 
   // Forget Password
   sl.registerFactory(() => ForgetPasswordCubit(forgetPasswordUseCase: sl()));
   sl.registerLazySingleton(() => ForgetPasswordUseCase(sl()));
-  sl.registerLazySingleton<ForgetPasswordRepo>(() =>
-      ForgetPasswordRepoImpl(apiClient: sl(), networkInfo: sl())
-          as ForgetPasswordRepo);
+  sl.registerLazySingleton<ForgetPasswordRepo>(
+        () => ForgetPasswordRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 }
 
 void _initHome() {
@@ -66,31 +68,33 @@ void _initHome() {
   sl.registerFactory(() => HomeCubit(getMoviesUseCase: sl()));
   sl.registerLazySingleton(() => GetMoviesUseCase(sl()));
   sl.registerLazySingleton<MoviesRepo>(
-      () => MoviesRepoImpl(apiClient: sl(), networkInfo: sl()));
+        () => MoviesRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 
   // Search
   sl.registerFactory(() => SearchCubit(searchMoviesUseCase: sl()));
   sl.registerLazySingleton(() => SearchMoviesUseCase(sl()));
   sl.registerLazySingleton<SearchRepo>(
-      () => SearchRepoImpl(apiClient: sl(), networkInfo: sl()));
+        () => SearchRepoImpl(apiClient: sl(), networkInfo: sl()),
+  );
 
   // Movie Details
   sl.registerFactory(
-    () => MovieDetailsCubit(
+        () => MovieDetailsCubit(
       getMovieDetailsUseCase: sl(),
       getMovieSuggestionsUseCase: sl(),
     ),
   );
 
   sl.registerLazySingleton<GetMovieDetailsUseCase>(
-    () => GetMovieDetailsUseCase(sl()),
+        () => GetMovieDetailsUseCase(sl()),
   );
 
   sl.registerLazySingleton<GetMovieSuggestionsUseCase>(
-    () => GetMovieSuggestionsUseCase(sl()),
+        () => GetMovieSuggestionsUseCase(sl()),
   );
 
   sl.registerLazySingleton<MovieDetailsRepo>(
-    () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()),
+        () => MovieDetailsRepoImpl(apiClient: sl(), networkInfo: sl()),
   );
 }

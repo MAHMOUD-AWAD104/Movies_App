@@ -5,6 +5,7 @@ import 'package:movies_app/features/auth/register/domain/repos/register_repo.dar
 
 class RegisterUseCase {
   final RegisterRepo repo;
+
   RegisterUseCase(this.repo);
 
   Future<Either<Failure, UserEntity>> call(RegisterParams params) {
@@ -13,6 +14,7 @@ class RegisterUseCase {
       email: params.email,
       password: params.password,
       phone: params.phone,
+      avatarPath: params.avatarPath,
     );
   }
 }
@@ -22,10 +24,13 @@ class RegisterParams {
   final String email;
   final String password;
   final String phone;
+  final String? avatarPath;
+
   const RegisterParams({
     required this.username,
     required this.email,
     required this.password,
-    required this.phone
+    required this.phone,
+    this.avatarPath,
   });
 }
